@@ -1,0 +1,512 @@
+---
+sidebar_position: 2
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 1: Introduction to ROS 2
+
+Your First Steps into Robot Programming
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/week-1" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+By the end of this week, you will:
+- ✅ Understand what ROS 2 is and why it's used
+- ✅ Know the core ROS 2 concepts (nodes, topics, messages)
+- ✅ Create and run your first ROS 2 nodes
+- ✅ Publish and subscribe to topics
+- ✅ Visualize ROS 2 systems with rqt_graph
+
+## 📚 What is ROS 2?
+
+### The Robotics Challenge
+
+Imagine building a humanoid robot from scratch. You need:
+- Camera driver to capture images
+- Object detection to identify things
+- Path planning to navigate
+- Motor controllers for movement
+- Sensor fusion to combine data
+
+Each component could be from a different manufacturer, written in different languages. How do they communicate?
+
+### Enter ROS 2
+
+**ROS 2 (Robot Operating System 2)** is a middleware framework that provides:
+
+1. **Communication Layer**: Standard ways for components to talk
+2. **Tools**: Pre-built solutions for common robotics problems
+3. **Libraries**: Reusable code for perception, planning, control
+4. **Ecosystem**: Thousands of packages from the community
+
+### Key Terminology
+
+| Term | Definition | Analogy |
+|------|------------|---------|
+| **Node** | Independent program doing one task | Like an app on your phone |
+| **Topic** | Named channel for data | Like a radio frequency |
+| **Message** | Data structure sent on topics | Like a text message format |
+| **Publisher** | Node that sends data | Radio transmitter |
+| **Subscriber** | Node that receives data | Radio receiver |
+
+## 🚀 Your First ROS 2 Node
+
+### Step 1: Verify Installation
+
+Open a terminal and check:
+
+```bash
+# Check ROS 2 version
+ros2 --version
+
+# Should output: ros2 cli version 0.x.x
+```
+
+### Step 2: Source ROS 2
+
+```bash
+source /opt/ros/humble/setup.bash
+
+# Add to bashrc to do this automatically
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+```
+
+### Step 3: Run Demo Nodes
+
+ROS 2 comes with demo nodes. Let's test them!
+
+**Terminal 1** - Start a publisher:
+```bash
+ros2 run demo_nodes_cpp talker
+```
+
+You should see:
+```
+[INFO] [talker]: Publishing: 'Hello World: 1'
+[INFO] [talker]: Publishing: 'Hello World: 2'
+...
+```
+
+**Terminal 2** - Start a subscriber:
+```bash
+ros2 run demo_nodes_py listener
+```
+
+You should see:
+```
+[INFO] [listener]: I heard: [Hello World: 1]
+[INFO] [listener]: I heard: [Hello World: 2]
+...
+```
+
+🎉 **Congratulations!** You just ran your first ROS 2 system!
+
+### What Just Happened?
+
+1. **Talker node** publishes messages to a topic called `/chatter`
+2. **Listener node** subscribes to `/chatter` topic
+3. Messages flow from publisher to subscriber
+4. Both nodes run independently but communicate seamlessly
+
+### Visualize with rqt_graph
+
+In a new terminal:
+```bash
+ros2 run rqt_graph rqt_graph
+```
+
+You'll see:
+- Two boxes (nodes): `/talker` and `/listener`
+- Arrow between them labeled `/chatter` (topic)
+
+This is your first ROS 2 **computation graph**!
+
+## 📡 Understanding Topics
+
+Topics are the backbone of ROS 2 communication.
+
+### List Active Topics
+
+```bash
+ros2 topic list
+```
+
+Output:
+```
+/chatter
+/parameter_events
+/rosout
+```
+
+### Get Topic Info
+
+```bash
+ros2 topic info /chatter
+```
+
+Output:
+```
+Type: std_msgs/msg/String
+Publisher count: 1
+Subscription count: 1
+```
+
+### Echo Topic Data
+
+See messages in real-time:
+```bash
+ros2 topic echo /chatter
+```
+
+### Publish Manually
+
+Send a message from command line:
+```bash
+ros2 topic pub /chatter std_msgs/msg/String "data: 'Hello from terminal!'"
+```
+
+The listener node will receive it!
+
+## 🐍 Creating Your Own Python Node
+
+Let's create a simple temperature sensor node.
+
+### Step 1: Create Workspace
+
+```bash
+# Create workspace
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+```
+
+### Step 2: Create Python File
+
+```bash
+# Create a simple node (no package yet)
+mkdir -p simple_nodes
+cd simple_nodes
+touch temperature_publisher.py
+chmod +x temperature_publisher.py
+```
+
+### Step 3: Write the Node
+
+Edit `temperature_publisher.py`:
+
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+import random
+
+class TemperaturePublisher(Node):
+    def __init__(self):
+        super().__init__('temperature_publisher')
+        
+        # Create publisher
+        self.publisher_ = self.create_publisher(
+            Float32,
+            'temperature',
+            10  # Queue size
+        )
+        
+        # Create timer (publish every 1 second)
+        self.timer = self.create_timer(1.0, self.timer_callback)
+        
+        self.get_logger().info('Temperature sensor node started!')
+    
+    def timer_callback(self):
+        # Simulate temperature reading
+        temp = 20.0 + random.uniform(-5.0, 5.0)
+        
+        # Create message
+        msg = Float32()
+        msg.data = temp
+        
+        # Publish
+        self.publisher_.publish(msg)
+        self.get_logger().info(f'Publishing temperature: {temp:.2f}°C')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = TemperaturePublisher()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+### Step 4: Run the Node
+
+```bash
+cd ~/ros2_ws/src/simple_nodes
+python3 temperature_publisher.py
+```
+
+Output:
+```
+[INFO] [temperature_publisher]: Temperature sensor node started!
+[INFO] [temperature_publisher]: Publishing temperature: 22.34°C
+[INFO] [temperature_publisher]: Publishing temperature: 18.91°C
+...
+```
+
+### Step 5: Create a Subscriber
+
+Create `temperature_subscriber.py`:
+
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+
+class TemperatureSubscriber(Node):
+    def __init__(self):
+        super().__init__('temperature_subscriber')
+        
+        # Create subscription
+        self.subscription = self.create_subscription(
+            Float32,
+            'temperature',
+            self.temperature_callback,
+            10
+        )
+        
+        self.get_logger().info('Temperature monitor node started!')
+    
+    def temperature_callback(self, msg):
+        temp = msg.data
+        
+        # Temperature alert logic
+        if temp > 25.0:
+            self.get_logger().warn(f'HIGH TEMPERATURE: {temp:.2f}°C')
+        elif temp < 15.0:
+            self.get_logger().warn(f'LOW TEMPERATURE: {temp:.2f}°C')
+        else:
+            self.get_logger().info(f'Temperature OK: {temp:.2f}°C')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = TemperatureSubscriber()
+    
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+### Step 6: Run Both Nodes
+
+**Terminal 1**:
+```bash
+python3 temperature_publisher.py
+```
+
+**Terminal 2**:
+```bash
+python3 temperature_subscriber.py
+```
+
+You should see the subscriber reacting to published temperatures!
+
+## 🔍 Understanding the Code
+
+### Node Initialization
+
+```python
+super().__init__('node_name')  # Give node a unique name
+```
+
+### Creating a Publisher
+
+```python
+self.publisher_ = self.create_publisher(
+    Float32,           # Message type
+    'temperature',     # Topic name
+    10                 # Queue size (buffer)
+)
+```
+
+### Publishing Messages
+
+```python
+msg = Float32()
+msg.data = 22.5
+self.publisher_.publish(msg)
+```
+
+### Creating a Subscription
+
+```python
+self.subscription = self.create_subscription(
+    Float32,                    # Message type
+    'temperature',              # Topic name
+    self.temperature_callback,  # Callback function
+    10                          # Queue size
+)
+```
+
+### Callback Function
+
+```python
+def temperature_callback(self, msg):
+    # This runs every time a message arrives
+    temperature = msg.data
+    print(f"Received: {temperature}")
+```
+
+## 📊 ROS 2 Command Line Tools
+
+### Introspection Commands
+
+```bash
+# List all nodes
+ros2 node list
+
+# Info about a node
+ros2 node info /temperature_publisher
+
+# List all topics
+ros2 topic list
+
+# Info about a topic
+ros2 topic info /temperature
+
+# Echo topic messages
+ros2 topic echo /temperature
+
+# Check message frequency
+ros2 topic hz /temperature
+
+# Bandwidth usage
+ros2 topic bw /temperature
+```
+
+### Debugging Tips
+
+```bash
+# Check if ROS 2 daemon is running
+ros2 daemon status
+
+# Restart daemon if issues
+ros2 daemon stop
+ros2 daemon start
+
+# View all parameters
+ros2 param list
+
+# View logs
+ros2 run rqt_console rqt_console
+```
+
+## 💪 Hands-On Exercises
+
+### Exercise 1: Modify Publishing Rate
+
+Change the timer in `temperature_publisher.py` to publish every 0.5 seconds instead of 1 second.
+
+**Hint**: Look for `self.create_timer(1.0, ...)`
+
+### Exercise 2: Add More Publishers
+
+Create a `humidity_publisher.py` that publishes humidity values (0-100%) to `/humidity` topic.
+
+### Exercise 3: Multi-Subscriber
+
+Modify the subscriber to listen to both `/temperature` and `/humidity` topics and display them together.
+
+### Exercise 4: Command Republisher
+
+Create a node that:
+1. Subscribes to `/temperature`
+2. If temperature > 30°C, publishes "COOLING" to `/ac_command`
+3. If temperature < 10°C, publishes "HEATING" to `/ac_command`
+
+## 🎯 Week 1 Project: Robot Status Monitor
+
+**Build a complete monitoring system**:
+
+1. **Create 3 publishers**:
+   - Battery level (0-100%)
+   - Motor temperature (°C)
+   - GPS position (lat, lon)
+
+2. **Create 1 subscriber**:
+   - Monitor all sensors
+   - Display dashboard in terminal
+   - Alert if battery < 20% or temp > 60°C
+
+3. **Bonus**:
+   - Add timestamps to messages
+   - Log data to a file
+   - Visualize with rqt_plot
+
+## 📚 Additional Resources
+
+- [ROS 2 Humble Tutorials](https://docs.ros.org/en/humble/Tutorials.html)
+- [Understanding Nodes](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html)
+- [Understanding Topics](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html)
+
+## ✅ Self-Assessment Quiz
+
+Test your understanding:
+
+1. What is the difference between a node and a topic?
+2. Can one publisher send to multiple subscribers? (Yes/No)
+3. What command shows the ROS 2 computation graph?
+4. What is the purpose of queue size in publishers/subscribers?
+5. How do you stop a running ROS 2 node?
+
+**Answers at bottom of page**
+
+## 🚀 Next Week Preview
+
+In Week 2, you'll learn:
+- Quality of Service (QoS) settings
+- Custom message types
+- Services for request-response communication
+- Working with ROS 2 interfaces
+
+<div style={{textAlign: 'center', margin: '2rem 0'}}>
+  <a href="/docs/module-1/week-2" className="button button--primary button--lg">
+    Continue to Week 2 →
+  </a>
+</div>
+
+---
+
+### Quiz Answers:
+1. Node = program/process, Topic = communication channel
+2. Yes! Topics support 1-to-many communication
+3. `ros2 run rqt_graph rqt_graph`
+4. Buffer for messages when processing is slow
+5. Ctrl+C or `ros2 node kill <node_name>`
+
+---
+
+**💬 Questions?** Ask the AI Assistant! Highlight any code or concept and ask for clarification.
+
+**🎯 Personalize**: Content adapts to your level. Sign in for a customized experience.
+
+**🌐 Translate**: View this page in Urdu with one click.

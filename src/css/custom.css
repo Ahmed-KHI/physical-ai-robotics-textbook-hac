@@ -1,0 +1,625 @@
+/**
+ * Custom CSS for Physical AI & Humanoid Robotics Platform
+ * Premium Educational Theme - Panaversity Green Style
+ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+/* =================================================================
+   Root Variables - Premium Educational Theme (Green)
+   ================================================================= */
+:root {
+  /* Primary Colors - Emerald Green (Panaversity Style) */
+  --ifm-color-primary: #10b981;
+  --ifm-color-primary-dark: #059669;
+  --ifm-color-primary-darker: #047857;
+  --ifm-color-primary-darkest: #065f46;
+  --ifm-color-primary-light: #22c55e;
+  --ifm-color-primary-lighter: #4ade80;
+  --ifm-color-primary-lightest: #86efac;
+  
+  /* Accent Colors - Light Green (Energy, Innovation) */
+  --ifm-color-accent: #22c55e;
+  --ifm-color-accent-hover: #16a34a;
+  
+  /* Success Color - Green (Progress) */
+  --ifm-color-success: #10b981;
+  
+  /* Background Colors */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8fafc;
+  
+  /* Text Colors */
+  --ifm-font-color-base: #1f2937;
+  --ifm-heading-color: #0f172a;
+  
+  /* Typography */
+  --ifm-font-family-base: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-size-base: 17px;
+  --ifm-line-height-base: 1.7;
+  --ifm-code-font-size: 90%;
+  
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1.5rem;
+  
+  /* Border Radius */
+  --ifm-global-radius: 0.75rem;
+  --ifm-button-border-radius: 0.5rem;
+  
+  /* Code Highlighting */
+  --docusaurus-highlighted-code-line-bg: rgba(30, 64, 175, 0.1);
+  
+  /* Navbar */
+  --ifm-navbar-height: 70px;
+  --ifm-navbar-background-color: transparent;
+  --ifm-navbar-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Colors */
+[data-theme='dark'] {
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b92f8;
+  --ifm-color-primary-darker: #2887f7;
+  --ifm-color-primary-darkest: #0d6efd;
+  --ifm-color-primary-light: #7db3fb;
+  --ifm-color-primary-lighter: #8dbbfb;
+  --ifm-color-primary-lightest: #b5d0fc;
+  
+  --ifm-color-accent: #fb923c;
+  
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  
+  --ifm-font-color-base: #e2e8f0;
+  --ifm-heading-color: #f1f5f9;
+  
+  --ifm-navbar-background-color: #1e293b;
+  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.1);
+}
+
+/* =================================================================
+   Typography Enhancements
+   ================================================================= */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+p {
+  margin-bottom: 1.25rem;
+}
+
+/* =================================================================
+   Navbar Customization - Panaversity Glass Style
+   ================================================================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  background: rgba(10, 20, 30, 0.45);
+  background-color: rgba(10, 20, 30, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 25px 60px -30px rgba(6, 15, 25, 0.75);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-radius: 0;
+  margin: 0;
+  width: 100%;
+  padding: 0.35rem 0;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1100;
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  background: linear-gradient(120deg, rgba(209, 250, 229, 0.25), rgba(59, 130, 246, 0.15));
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.navbar__inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #ecfdf5 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  transform: none;
+}
+
+.navbar__brand .navbar__logo {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 6px 18px rgba(52, 211, 153, 0.45));
+}
+
+.navbar__title {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.navbar__items--right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar__items--left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar__items--left .navbar__item {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.navbar__items--left .navbar__item:not(:last-child) {
+  margin-right: 2rem;
+}
+
+/* Custom nav links container */
+.nav-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5rem;
+  font-weight: 500;
+}
+
+.nav-link,
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #f8fafc !important;
+  transition: color 0.2s ease;
+  position: relative;
+  padding: 0.35rem 1rem;
+  text-decoration: none !important;
+}
+
+.nav-link::after,
+.navbar__link:not(.navbar-get-started)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.navbar__link:hover,
+.navbar__link--active {
+  color: #6ee7b7 !important;
+}
+
+.nav-link:hover::after,
+.navbar__link:not(.navbar-get-started):hover::after,
+.navbar__link--active::after {
+  width: 100%;
+}
+
+/* Dropdown styling */
+.dropdown__menu {
+  border-radius: 12px;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0.5rem;
+  backdrop-filter: blur(18px);
+}
+
+.dropdown__link {
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.dropdown__link:hover {
+  background: rgba(16, 185, 129, 0.08) !important;
+  color: #059669 !important;
+}
+
+/* Get Started Button - Panaversity Green Style */
+.navbar-get-started {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.75rem;
+  background: linear-gradient(120deg, #6ee7b7 0%, #34d399 25%, #10b981 60%, #059669 100%);
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  text-decoration: none !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 15px 35px -15px rgba(16, 185, 129, 0.9);
+  min-width: 150px;
+}
+
+.navbar-get-started:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 25px 45px -20px rgba(16, 185, 129, 0.9);
+  color: #ecfdf5 !important;
+  text-decoration: none !important;
+}
+
+#chatbot-trigger:hover {
+  background: var(--ifm-color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* =================================================================
+   Hero Section (Homepage)
+   ================================================================= */
+.hero {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.hero__title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.hero__subtitle {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* =================================================================
+   Content Area Enhancements
+   ================================================================= */
+.markdown {
+  --ifm-leading: 1.7;
+}
+
+.markdown > h2 {
+  --ifm-h2-font-size: 2rem;
+  border-bottom: 2px solid var(--ifm-color-primary);
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+}
+
+.markdown img {
+  border-radius: var(--ifm-global-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+/* =================================================================
+   Code Blocks
+   ================================================================= */
+.prism-code {
+  border-radius: var(--ifm-global-radius);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+code {
+  background-color: rgba(30, 64, 175, 0.1);
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.9em;
+}
+
+[data-theme='dark'] code {
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+/* =================================================================
+   Sidebar
+   ================================================================= */
+.theme-doc-sidebar-container {
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+[data-theme='dark'] .theme-doc-sidebar-container {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu__link {
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.menu__link--active {
+  background-color: rgba(30, 64, 175, 0.1);
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+/* =================================================================
+   Cards & Feature Sections
+   ================================================================= */
+.card {
+  border-radius: var(--ifm-global-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+/* =================================================================
+   Buttons
+   ================================================================= */
+.button {
+  border-radius: var(--ifm-button-border-radius);
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.2s ease;
+}
+
+.button--primary {
+  background: var(--ifm-color-primary);
+  border: none;
+}
+
+.button--primary:hover {
+  background: var(--ifm-color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+
+.button--secondary {
+  background: var(--ifm-color-accent);
+  color: white;
+  border: none;
+}
+
+.button--secondary:hover {
+  background: var(--ifm-color-accent-hover);
+  color: white;
+}
+
+/* =================================================================
+   Admonitions (Info Boxes)
+   ================================================================= */
+.admonition {
+  border-radius: var(--ifm-global-radius);
+  border-left-width: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* =================================================================
+   Footer
+   ================================================================= */
+.footer {
+  padding: 3rem 0 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer__title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ifm-heading-color);
+}
+
+/* =================================================================
+   Responsive Design
+   ================================================================= */
+@media (max-width: 996px) {
+  :root {
+    --ifm-spacing-horizontal: 1rem;
+    --ifm-navbar-height: 60px;
+  }
+
+  .navbar {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    background-color: rgba(15, 23, 42, 0.98) !important;
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar__items--left {
+    padding-left: 0;
+  }
+
+  .navbar__brand {
+    position: relative;
+    transform: none;
+    margin-bottom: 0;
+  }
+
+  .navbar__logo {
+    height: 28px;
+  }
+
+  .navbar__title {
+    font-size: 1rem;
+  }
+
+  .hero__title {
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+  
+  .hero__subtitle {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  
+  h1 {
+    font-size: 1.875rem;
+    line-height: 1.3;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .markdown > * {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --ifm-font-size-base: 15px;
+    --ifm-spacing-horizontal: 0.875rem;
+  }
+  
+  /* Hide navbar title and links on mobile, only show logo and Get Started button */
+  .navbar__title {
+    display: none !important;
+  }
+  
+  .navbar__items--left .navbar__item:not(.navbar__logo) {
+    display: none !important;
+  }
+  
+  .navbar__items--right .navbar__item:not(.navbar-get-started) {
+    display: none !important;
+  }
+
+  /* Ensure logo and Get Started button are visible */
+  .navbar__logo {
+    display: flex !important;
+  }
+
+  .navbar-get-started {
+    display: flex !important;
+  }
+
+  /* Adjust navbar spacing for mobile */
+  .navbar__inner {
+    padding: 0 1rem;
+    justify-content: space-between;
+  }
+  
+  .hero {
+    padding: 2.5rem 0;
+  }
+  
+  .hero__title {
+    font-size: 1.875rem;
+    line-height: 1.2;
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .navbar__item {
+    font-size: 0.9rem;
+  }
+
+  .table-of-contents {
+    font-size: 0.85rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  pre {
+    margin: 0 -0.875rem;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --ifm-font-size-base: 14px;
+    --ifm-spacing-horizontal: 0.75rem;
+  }
+
+  .hero__title {
+    font-size: 1.625rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.625rem;
+  }
+
+  h2 {
+    font-size: 1.375rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+  }
+
+  .button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

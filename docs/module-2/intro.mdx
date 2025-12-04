@@ -1,0 +1,124 @@
+---
+sidebar_position: 1
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Module 2: The Digital Twin (Gazebo & Unity)
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-2/intro" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+Physics Simulation and Environment Building
+
+## 🎯 Module Overview
+
+**Duration**: Weeks 6-7 (2 weeks)  
+**Focus**: Creating realistic simulations of robots and environments
+
+In this module, you'll learn to create **digital twins** - virtual replicas of physical robots that behave identically to their real-world counterparts. This allows you to test, develop, and train robots safely in simulation before deploying to hardware.
+
+## 🎮 What is a Digital Twin?
+
+A digital twin is a virtual model that:
+- Mirrors the physical robot's geometry
+- Simulates real physics (gravity, friction, collisions)
+- Includes sensor models (cameras, LiDAR, IMU)
+- Responds identically to control commands
+- Enables "sim-to-real" transfer
+
+## 📚 What You'll Learn
+
+- ✅ Set up Gazebo simulation environment
+- ✅ Create realistic physics simulations
+- ✅ Model sensors and actuators
+- ✅ Import URDF robots into simulators
+- ✅ Build custom environments
+- ✅ High-fidelity rendering with Unity
+- ✅ Generate synthetic training data
+
+## 🛠️ Tools Covered
+
+### Gazebo Classic 11
+- Industry-standard robot simulator
+- Built-in physics engine (ODE)
+- ROS 2 integration via gazebo_ros
+- Plugin system for custom functionality
+
+### Gazebo Fortress (New)
+- Next-generation Gazebo (Ignition)
+- Better performance and graphics
+- Modern architecture
+- Improved sensor models
+
+### Unity
+- High-quality 3D rendering
+- Perception package for ML
+- Human-robot interaction scenarios
+- Photorealistic environments
+
+## 📅 Weekly Breakdown
+
+### Week 6: Gazebo Fundamentals
+**Topics:**
+- Gazebo installation and setup
+- World and model creation
+- Physics engine configuration
+- Sensor simulation
+- ROS 2 Gazebo integration
+
+📖 [Week 6 Content →](/docs/module-2/week-6)
+
+### Week 7: Advanced Simulation & Unity
+**Topics:**
+- Custom plugins
+- Unity setup for robotics
+- Unity Perception package
+- Synthetic data generation
+- Sim-to-real techniques
+
+📖 [Week 7 Content →](/docs/module-2/week-7)
+
+## 🎯 Module Project
+
+**Build a Warehouse Robot Simulation**
+
+Create complete simulation with:
+- Mobile robot with LiDAR and camera
+- Warehouse environment with obstacles
+- Autonomous navigation
+- Object detection
+- ROS 2 control interface
+
+## 🌟 Why Simulation Matters
+
+**Development Speed:**
+- Test without hardware (no waiting)
+- No risk of damage
+- Iterate rapidly
+
+**Cost Savings:**
+- No physical prototypes needed
+- One dev machine = 100 virtual robots
+- Test dangerous scenarios safely
+
+**ML Training:**
+- Generate unlimited training data
+- Controlled conditions
+- Domain randomization
+
+## Real-World Applications
+
+- 🏭 **Industrial Testing**: ABB uses simulation for robot programming
+- 🚗 **Autonomous Vehicles**: Waymo simulates millions of miles
+- 🚁 **Drones**: DJI tests in simulation first
+- 🤖 **Humanoids**: Boston Dynamics develops in sim
+
+[Start Week 6 →](/docs/module-2/week-6)
+
+---
+
+**💬 Need Help?** Ask the AI Assistant about simulation concepts!

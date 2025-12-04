@@ -1,0 +1,346 @@
+---
+sidebar_position: 3
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 12: LLM-Powered Task Planning
+
+GPT-4 as Robot Brain
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-4/week-12" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Integrate GPT-4 for planning
+- Decompose complex tasks
+- Implement semantic reasoning
+- Add safety constraints
+- Chain actions intelligently
+
+## 🧠 GPT-4 Integration
+
+### Basic Task Planner
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key")
+
+class LLMTaskPlanner:
+    def __init__(self):
+        self.system_prompt = """You are a robot task planner. Given a high-level command, 
+        break it down into specific robot actions.
+        
+        Available actions:
+        - navigate(location): Move to location
+        - pick(object): Pick up object
+        - place(object, location): Place object at location
+        - scan(): Look around with camera
+        - wait(seconds): Wait for duration
+        
+        Return Python list of actions."""
+    
+    def plan(self, command: str) -> list:
+        """Generate action plan from command"""
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": command}
+            ],
+            temperature=0.3
+        )
+        
+        plan_text = response.choices[0].message.content
+        
+        # Parse plan (simple eval - use ast.literal_eval in production)
+        plan = eval(plan_text)
+        return plan
+
+# Usage
+planner = LLMTaskPlanner()
+
+command = "Bring me a bottle of water from the kitchen"
+plan = planner.plan(command)
+
+print(plan)
+```
+
+**Output:**
+```python
+[
+    {'action': 'navigate', 'target': 'kitchen'},
+    {'action': 'scan'},
+    {'action': 'pick', 'object': 'water bottle'},
+    {'action': 'navigate', 'target': 'user_location'},
+    {'action': 'place', 'object': 'water bottle', 'location': 'user'}
+]
+```
+
+## 🎯 Semantic Understanding
+
+### Context-Aware Planning
+
+```python
+class SemanticPlanner:
+    def __init__(self):
+        self.world_knowledge = """
+        Environment:
+        - Kitchen: Contains fridge, sink, counter
+        - Living room: Contains couch, TV, coffee table
+        - Bedroom: Contains bed, dresser, nightstand
+        
+        Common object locations:
+        - Water bottles: Kitchen fridge
+        - Remote: Living room coffee table
+        - Books: Bedroom nightstand
+        """
+    
+    def plan_with_context(self, command: str, current_state: dict) -> list:
+        """Plan with environmental context"""
+        prompt = f"""{self.world_knowledge}
+        
+        Current robot state:
+        - Location: {current_state['location']}
+        - Holding: {current_state.get('holding', 'nothing')}
+        
+        Task: {command}
+        
+        Generate optimal action sequence."""
+        
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a robot task planner."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        
+        return self.parse_plan(response.choices[0].message.content)
+
+# Usage
+planner = SemanticPlanner()
+
+state = {
+    'location': 'living_room',
+    'holding': None
+}
+
+plan = planner.plan_with_context(
+    "I'm thirsty",
+    current_state=state
+)
+```
+
+## 🛡️ Safety Constraints
+
+### Constrained Planning
+
+```python
+class SafeTaskPlanner:
+    def __init__(self):
+        self.safety_rules = """
+        Safety Rules:
+        1. Never navigate with object in gripper
+        2. Check if path is clear before moving
+        3. Grasp delicate objects gently (force < 10N)
+        4. Don't pick up objects > 2kg
+        5. Stop if human detected in path
+        """
+    
+    def validate_plan(self, plan: list) -> tuple[bool, str]:
+        """Validate plan against safety rules"""
+        for i, action in enumerate(plan):
+            # Rule 1: No navigation while holding
+            if action['action'] == 'navigate':
+                if i > 0 and plan[i-1]['action'] == 'pick':
+                    return False, "Cannot navigate immediately after picking"
+            
+            # Rule 4: Weight check
+            if action['action'] == 'pick':
+                obj_weight = self.get_object_weight(action['object'])
+                if obj_weight > 2.0:
+                    return False, f"Object too heavy: {obj_weight}kg"
+        
+        return True, "Plan is safe"
+    
+    def get_object_weight(self, obj: str) -> float:
+        """Lookup object weight (from knowledge base)"""
+        weights = {
+            'water bottle': 0.5,
+            'book': 0.8,
+            'chair': 5.0,  # Too heavy!
+        }
+        return weights.get(obj, 1.0)
+
+# Usage
+planner = SafeTaskPlanner()
+
+unsafe_plan = [
+    {'action': 'pick', 'object': 'water bottle'},
+    {'action': 'navigate', 'target': 'living_room'}
+]
+
+valid, msg = planner.validate_plan(unsafe_plan)
+print(f"Valid: {valid}, Message: {msg}")
+```
+
+## 🔄 Adaptive Execution
+
+### Handle Failures
+
+```python
+class AdaptiveExecutor:
+    def __init__(self):
+        self.planner = LLMTaskPlanner()
+    
+    def execute_plan(self, plan: list):
+        """Execute plan with error handling"""
+        for i, action in enumerate(plan):
+            success = self.execute_action(action)
+            
+            if not success:
+                # Replan from failure point
+                self.get_logger().warning(f"Action {i} failed, replanning...")
+                
+                remaining_goal = self.extract_remaining_goal(plan, i)
+                new_plan = self.planner.replan(
+                    original_plan=plan,
+                    failed_action=action,
+                    remaining_goal=remaining_goal
+                )
+                
+                # Continue with new plan
+                return self.execute_plan(new_plan)
+        
+        return True
+    
+    def replan(self, original_plan, failed_action, remaining_goal):
+        """Use GPT-4 to generate alternative plan"""
+        prompt = f"""
+        Original plan failed at: {failed_action}
+        Remaining goal: {remaining_goal}
+        
+        Generate alternative plan avoiding the failed action.
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a robot replanner."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        
+        return eval(response.choices[0].message.content)
+```
+
+## 🎭 Multi-Step Reasoning
+
+### Chain-of-Thought Planning
+
+```python
+class ChainOfThoughtPlanner:
+    def plan_with_reasoning(self, command: str) -> dict:
+        """Plan with explicit reasoning steps"""
+        prompt = f"""Command: {command}
+        
+        Think step-by-step:
+        1. What is the goal?
+        2. What objects are involved?
+        3. Where are they located?
+        4. What's the optimal sequence?
+        5. What could go wrong?
+        
+        Then provide the action plan."""
+        
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Think step-by-step"},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        
+        output = response.choices[0].message.content
+        
+        # Parse reasoning and plan
+        reasoning, plan = self.parse_reasoning(output)
+        
+        return {
+            'reasoning': reasoning,
+            'plan': plan
+        }
+
+# Example
+planner = ChainOfThoughtPlanner()
+result = planner.plan_with_reasoning("Clean up the living room")
+
+print("Reasoning:")
+print(result['reasoning'])
+print("\nPlan:")
+print(result['plan'])
+```
+
+## 🎯 Real-Time Vision Integration
+
+### Vision-Language Planning
+
+```python
+class VisionLanguagePlanner:
+    def plan_from_image(self, image, command: str):
+        """Plan based on camera image"""
+        # Encode image to base64
+        import base64
+        _, buffer = cv2.imencode('.jpg', image)
+        image_base64 = base64.b64encode(buffer).decode()
+        
+        response = client.chat.completions.create(
+            model="gpt-4-vision-preview",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": f"Task: {command}\nWhat objects do you see? How should the robot proceed?"},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        return response.choices[0].message.content
+```
+
+## 💪 Week 12 Project
+
+**AI Task Execution System**
+
+Build complete system:
+- Natural language task input
+- GPT-4 task decomposition
+- Safety validation
+- Adaptive execution
+- Vision-language integration
+
+**Example Tasks:**
+- "Organize the desk"
+- "Prepare coffee"
+- "Set the table for dinner"
+
+**Requirements:**
+- Handle 20+ task types
+- 90%+ success rate
+- Real-time replanning
+- Safety-first approach
+
+[Continue to Week 13 →](/docs/module-4/week-13)

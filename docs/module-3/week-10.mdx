@@ -1,0 +1,297 @@
+---
+sidebar_position: 4
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 10: Navigation & Deployment
+
+Autonomous Motion and Real Hardware
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-3/week-10" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Implement Nav2 navigation stack
+- Plan collision-free paths
+- Deploy to Jetson Orin
+- Complete sim-to-real pipeline
+- Performance optimization
+
+## 🗺️ Nav2 Navigation
+
+### Setup Nav2
+
+```bash
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
+```
+
+### Configuration
+
+`nav2_params.yaml`:
+```yaml
+bt_navigator:
+  ros__parameters:
+    global_frame: map
+    robot_base_frame: base_link
+    use_sim_time: false
+
+controller_server:
+  ros__parameters:
+    controller_frequency: 20.0
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      max_vel_x: 0.5
+      max_vel_theta: 1.0
+
+planner_server:
+  ros__parameters:
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner/NavfnPlanner"
+```
+
+### Launch Navigation
+
+```bash
+ros2 launch nav2_bringup navigation_launch.py \
+  params_file:=nav2_params.yaml
+```
+
+## 🎯 Goal-Based Navigation
+
+### Send Navigation Goals
+
+```python
+from geometry_msgs.msg import PoseStamped
+from nav2_simple_commander.robot_navigator import BasicNavigator
+
+class NavigationController:
+    def __init__(self):
+        self.navigator = BasicNavigator()
+        
+    def navigate_to_pose(self, x, y, theta):
+        goal = PoseStamped()
+        goal.header.frame_id = 'map'
+        goal.header.stamp = self.navigator.get_clock().now().to_msg()
+        goal.pose.position.x = x
+        goal.pose.position.y = y
+        
+        # Convert theta to quaternion
+        goal.pose.orientation.z = np.sin(theta/2.0)
+        goal.pose.orientation.w = np.cos(theta/2.0)
+        
+        self.navigator.goToPose(goal)
+        
+        # Wait for completion
+        while not self.navigator.isTaskComplete():
+            feedback = self.navigator.getFeedback()
+            print(f"Distance remaining: {feedback.distance_remaining}")
+        
+        return self.navigator.getResult()
+```
+
+## 🚧 Obstacle Avoidance
+
+### Costmap Configuration
+
+```yaml
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      width: 3
+      height: 3
+      resolution: 0.05
+      plugins: ["obstacle_layer", "inflation_layer"]
+      
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+```
+
+### Dynamic Obstacles
+
+```python
+from nav2_msgs.msg import Costmap
+
+class DynamicObstacleHandler(Node):
+    def __init__(self):
+        super().__init__('obstacle_handler')
+        
+        # Subscribe to detections
+        self.create_subscription(
+            DetectionArray, '/detections',
+            self.detection_callback, 10
+        )
+        
+        # Publish to costmap
+        self.costmap_pub = self.create_publisher(
+            Costmap, '/local_costmap/costmap', 10
+        )
+    
+    def detection_callback(self, detections):
+        # Convert detections to costmap updates
+        for det in detections.detections:
+            self.add_to_costmap(det.bbox, cost=254)
+```
+
+## 🤖 Jetson Deployment
+
+### Setup Jetson Orin
+
+```bash
+# Flash JetPack (includes CUDA, TensorRT)
+sudo nvpkg install nvidia-jetpack
+
+# Install ROS 2
+sudo apt install ros-humble-ros-base
+
+# Install Isaac ROS
+# (Follow Isaac ROS Jetson installation guide)
+```
+
+### Optimize for Edge
+
+```python
+# TensorRT optimization
+import tensorrt as trt
+
+def optimize_model(onnx_path, engine_path):
+    logger = trt.Logger(trt.Logger.WARNING)
+    builder = trt.Builder(logger)
+    network = builder.create_network()
+    parser = trt.OnnxParser(network, logger)
+    
+    # Parse ONNX
+    with open(onnx_path, 'rb') as model:
+        parser.parse(model.read())
+    
+    # Build engine
+    config = builder.create_builder_config()
+    config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, 1 << 30)  # 1GB
+    config.set_flag(trt.BuilderFlag.FP16)  # Use FP16 for speed
+    
+    engine = builder.build_serialized_network(network, config)
+    
+    # Save
+    with open(engine_path, 'wb') as f:
+        f.write(engine)
+```
+
+### Monitor Performance
+
+```python
+import psutil
+import GPUtil
+
+class PerformanceMonitor(Node):
+    def __init__(self):
+        super().__init__('perf_monitor')
+        self.timer = self.create_timer(1.0, self.monitor)
+    
+    def monitor(self):
+        # CPU
+        cpu_percent = psutil.cpu_percent()
+        
+        # Memory
+        mem = psutil.virtual_memory()
+        
+        # GPU
+        gpus = GPUtil.getGPUs()
+        gpu_util = gpus[0].load * 100
+        gpu_mem = gpus[0].memoryUtil * 100
+        
+        self.get_logger().info(
+            f'CPU: {cpu_percent}% | '
+            f'RAM: {mem.percent}% | '
+            f'GPU: {gpu_util}% | '
+            f'VRAM: {gpu_mem}%'
+        )
+```
+
+## 🔄 Sim-to-Real Pipeline
+
+### 1. Train in Isaac Sim
+
+```python
+# Isaac Sim training
+env = IsaacGymEnv()
+policy = PPO(env)
+
+for epoch in range(1000):
+    policy.train()
+    
+# Save policy
+policy.save('trained_policy.pth')
+```
+
+### 2. Domain Randomization
+
+```python
+# Randomize in sim
+randomization_config = {
+    'lighting': {'min': 0.3, 'max': 1.5},
+    'friction': {'min': 0.3, 'max': 1.2},
+    'mass': {'min': 0.8, 'max': 1.2},
+    'camera_noise': {'stddev': 0.02}
+}
+```
+
+### 3. Deploy to Hardware
+
+```python
+# Load policy on Jetson
+policy = torch.jit.load('trained_policy.pth')
+policy.eval()
+
+# Run on real robot
+while True:
+    observation = get_sensor_data()
+    action = policy(observation)
+    execute_action(action)
+```
+
+## 💪 Module 3 Final Project
+
+**Autonomous Delivery Robot**
+
+**Requirements:**
+
+**1. Simulation (Isaac Sim):**
+- Office environment
+- Obstacle-rich paths
+- 10+ delivery locations
+
+**2. Perception (Isaac ROS):**
+- Visual SLAM localization
+- Object detection
+- Depth sensing
+
+**3. Navigation (Nav2):**
+- Autonomous path planning
+- Dynamic obstacle avoidance
+- Goal-based navigation
+
+**4. Deployment (Jetson Orin):**
+- All algorithms optimized
+- Real-time performance
+- Complete integration
+
+**Success Criteria:**
+- Navigate 100m autonomously
+- 95%+ success rate in sim
+- Transfer to real hardware
+- Less than 100ms perception latency
+
+[Continue to Module 4 →](/docs/module-4/intro)

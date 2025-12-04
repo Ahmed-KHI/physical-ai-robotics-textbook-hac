@@ -1,0 +1,19 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Physical AI Logo">
+  <defs>
+    <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7" />
+      <stop offset="40%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="spark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#d1fae5" stop-opacity="0.4" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="14" fill="#0f172a" />
+  <path d="M10 24c0-8.284 6.716-15 15-15s15 6.716 15 15-6.716 15-15 15" fill="none" stroke="url(#navGrad)" stroke-width="4" stroke-linecap="round" />
+  <path d="M25 13c5 3 7.5 6.5 7.5 11s-2.5 8-7.5 11" fill="none" stroke="url(#spark)" stroke-width="3.2" stroke-linecap="round" />
+  <circle cx="18" cy="18" r="4" fill="#ecfdf5" />
+  <circle cx="18" cy="18" r="2.2" fill="#059669" />
+  <path d="M18 18l7.5 6.5-4 10" fill="none" stroke="#ecfdf5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

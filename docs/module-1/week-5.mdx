@@ -1,0 +1,154 @@
+---
+sidebar_position: 6
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 5: Actions and Advanced Patterns
+
+Long-Running Tasks and Best Practices
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/week-5" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Implement ROS 2 actions
+- Handle long-running tasks with feedback
+- Use behavior trees
+- Apply best practices
+
+## 🎬 Actions
+
+Actions handle tasks that take time (navigation, grasping):
+
+### Action Definition
+
+`action/Navigate.action`:
+```
+# Goal
+geometry_msgs/PoseStamped target_pose
+---
+# Result
+bool success
+float32 total_distance
+---
+# Feedback
+geometry_msgs/PoseStamped current_pose
+float32 distance_remaining
+```
+
+### Action Server
+
+```python
+from my_interfaces.action import Navigate
+from rclpy.action import ActionServer
+
+class NavigationServer(Node):
+    def __init__(self):
+        super().__init__('navigation_server')
+        self._action_server = ActionServer(
+            self,
+            Navigate,
+            'navigate',
+            self.execute_callback
+        )
+    
+    async def execute_callback(self, goal_handle):
+        self.get_logger().info('Navigating to goal...')
+        
+        feedback = Navigate.Feedback()
+        
+        # Simulate navigation
+        for i in range(10):
+            feedback.distance_remaining = 10.0 - i
+            goal_handle.publish_feedback(feedback)
+            await asyncio.sleep(0.5)
+        
+        goal_handle.succeed()
+        result = Navigate.Result()
+        result.success = True
+        result.total_distance = 10.0
+        return result
+```
+
+### Action Client
+
+```python
+from rclpy.action import ActionClient
+
+client = ActionClient(self, Navigate, 'navigate')
+goal = Navigate.Goal()
+goal.target_pose = target
+
+future = client.send_goal_async(goal, feedback_callback=feedback_cb)
+```
+
+## 🌳 Behavior Trees
+
+Organize complex robot behaviors:
+
+```python
+import py_trees
+
+# Create behavior tree
+root = py_trees.composites.Sequence("Robot Task", memory=False)
+root.add_children([
+    DetectObject(),
+    NavigateToObject(),
+    GraspObject(),
+    ReturnToBase()
+])
+```
+
+## ✅ Best Practices
+
+### 1. Node Lifecycle
+```python
+from rclpy.lifecycle import LifecycleNode, State
+
+class MyLifecycleNode(LifecycleNode):
+    def on_configure(self, state: State):
+        self.get_logger().info('Configuring...')
+        return TransitionCallbackReturn.SUCCESS
+```
+
+### 2. Error Handling
+```python
+try:
+    result = self.call_service()
+except Exception as e:
+    self.get_logger().error(f'Service failed: {e}')
+    return False
+```
+
+### 3. Clean Shutdown
+```python
+def destroy_node(self):
+    self.get_logger().info('Shutting down gracefully')
+    super().destroy_node()
+```
+
+## 💪 Module 1 Final Project
+
+**Autonomous Robot Arm System**
+
+Build complete system with:
+- URDF robot model
+- Joint state publisher
+- Inverse kinematics service
+- Pick-and-place action
+- RViz visualization
+- Launch file for all nodes
+
+**Requirements:**
+- ✅ 4-DOF arm model
+- ✅ Real-time visualization
+- ✅ Action-based control
+- ✅ Error handling
+- ✅ Documentation
+
+[Continue to Module 2 →](/docs/module-2/intro)

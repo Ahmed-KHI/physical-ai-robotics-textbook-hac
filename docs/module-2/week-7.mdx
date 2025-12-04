@@ -1,0 +1,226 @@
+---
+sidebar_position: 3
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 7: Advanced Simulation & Unity
+
+Photorealistic Rendering and Synthetic Data
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-2/week-7" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Create custom Gazebo plugins
+- Set up Unity for robotics
+- Generate synthetic training data
+- Implement sim-to-real techniques
+- Domain randomization
+
+## 🔌 Custom Gazebo Plugins
+
+### C++ Plugin Example
+
+```cpp
+#include <gazebo/gazebo.hh>
+#include <gazebo/physics/physics.hh>
+
+namespace gazebo {
+  class CustomPlugin : public ModelPlugin {
+    public: void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
+      this->model = _model;
+      this->updateConnection = event::Events::ConnectWorldUpdateBegin(
+        std::bind(&CustomPlugin::OnUpdate, this));
+    }
+    
+    public: void OnUpdate() {
+      // Custom behavior here
+      auto force = ignition::math::Vector3d(10, 0, 0);
+      this->model->GetLink("base_link")->AddForce(force);
+    }
+    
+    private: physics::ModelPtr model;
+    private: event::ConnectionPtr updateConnection;
+  };
+  
+  GZ_REGISTER_MODEL_PLUGIN(CustomPlugin)
+}
+```
+
+## 🎮 Unity Setup for Robotics
+
+### Install Unity Hub
+
+```bash
+# Download from unity.com
+# Install Unity 2022.3 LTS
+```
+
+### Install Robotics Packages
+
+In Unity Package Manager:
+- **ROS-TCP-Connector**: ROS 2 communication
+- **Perception Package**: Synthetic data generation
+- **URDF Importer**: Import robot models
+
+### Unity Project Structure
+
+```
+Assets/
+├── Robots/
+│   └── MyRobot.urdf
+├── Scenes/
+│   └── Warehouse.unity
+├── Scripts/
+│   └── RobotController.cs
+└── Materials/
+    └── Textures/
+```
+
+### ROS 2 Integration
+
+```csharp
+using Unity.Robotics.ROSTCPConnector;
+using RosMessageTypes.Geometry;
+
+public class RobotController : MonoBehaviour {
+    ROSConnection ros;
+    
+    void Start() {
+        ros = ROSConnection.GetOrCreateInstance();
+        ros.Subscribe<TwistMsg>("cmd_vel", MoveRobot);
+    }
+    
+    void MoveRobot(TwistMsg msg) {
+        float linear = (float)msg.linear.x;
+        float angular = (float)msg.angular.z;
+        // Apply to robot
+    }
+}
+```
+
+## 📊 Synthetic Data Generation
+
+### Perception Camera Setup
+
+```csharp
+using UnityEngine.Perception.GroundTruth;
+
+// Add to camera
+var perceptionCamera = camera.AddComponent<PerceptionCamera>();
+
+// Add labelers
+perceptionCamera.AddLabeler(new BoundingBox2DLabeler());
+perceptionCamera.AddLabeler(new SemanticSegmentationLabeler());
+perceptionCamera.AddLabeler(new InstanceSegmentationLabeler());
+```
+
+### Output Data Format
+
+Generated annotations:
+```json
+{
+  "frame": 0,
+  "timestamp": 0.033,
+  "objects": [
+    {
+      "label": "box",
+      "bbox": [120, 80, 200, 150],
+      "confidence": 1.0
+    }
+  ]
+}
+```
+
+## 🎲 Domain Randomization
+
+Improve sim-to-real transfer by randomizing:
+
+### Lighting Randomization
+
+```csharp
+void RandomizeLighting() {
+    Light light = GetComponent<Light>();
+    light.intensity = Random.Range(0.5f, 2.0f);
+    light.color = Random.ColorHSV();
+}
+```
+
+### Texture Randomization
+
+```csharp
+void RandomizeTextures() {
+    Renderer rend = GetComponent<Renderer>();
+    rend.material.color = Random.ColorHSV();
+    rend.material.SetFloat("_Metallic", Random.value);
+}
+```
+
+### Physics Randomization
+
+```csharp
+void RandomizePhysics() {
+    Rigidbody rb = GetComponent<Rigidbody>();
+    rb.mass = Random.Range(0.5f, 2.0f);
+    rb.drag = Random.Range(0.0f, 0.5f);
+}
+```
+
+## 🔄 Sim-to-Real Transfer
+
+### Best Practices
+
+1. **Accurate Physics**: Match real-world properties
+2. **Sensor Noise**: Add realistic noise models
+3. **Timing**: Match real robot control frequencies
+4. **Randomization**: Vary conditions in simulation
+5. **Hardware-in-Loop**: Test with real sensors when possible
+
+### Validation Strategy
+
+```python
+# Test in sim
+sim_success_rate = test_in_simulation(policy)
+
+# Transfer to real robot
+real_success_rate = test_on_hardware(policy)
+
+# Calculate sim-to-real gap
+gap = abs(sim_success_rate - real_success_rate)
+assert gap < 0.15  # Less than 15% difference
+```
+
+## 💪 Module 2 Final Project
+
+**Complete Warehouse Simulation**
+
+**Unity Scene:**
+- Warehouse environment with shelves
+- Mobile robot with gripper
+- Products to pick
+- Realistic lighting
+
+**Tasks:**
+- Navigate to target location
+- Detect and segment objects
+- Generate synthetic dataset (1000 images)
+- Train simple object detector
+- Deploy to Gazebo for testing
+
+**Deliverables:**
+- Unity scene with randomization
+- Gazebo world matching Unity
+- Dataset with annotations
+- ROS 2 navigation stack
+- Documentation
+
+[Continue to Module 3 →](/docs/module-3/intro)
+
+---
+
+**💡 Tip**: Domain randomization is key to sim-to-real success. Vary lighting, textures, and physics!

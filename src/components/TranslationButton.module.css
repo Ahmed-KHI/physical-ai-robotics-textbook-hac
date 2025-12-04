@@ -1,0 +1,227 @@
+.container {
+  margin: 1.5rem 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.translateButton {
+  flex: 1;
+  padding: 0.625rem 1.25rem;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.translateButton:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.translateButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e2e8f0;
+  border-top-color: #64748b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.translatedContent {
+  margin-top: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.contentHeader {
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background: #ffffff;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.note {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.content {
+  padding: 2rem;
+  color: #1e293b;
+  line-height: 1.9;
+}
+
+.urduText {
+  font-family: 'Noto Nastalikh Urdu', 'Jameel Noori Nastaleeq', 'Alvi Nastaleeq', 'Nafees Nastaleeq', Arial, sans-serif;
+  font-size: 1.1rem;
+  direction: rtl;
+  text-align: right;
+  line-height: 2;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+  color: #1e293b;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.content code {
+  background: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  direction: ltr;
+  display: inline-block;
+}
+
+.content pre {
+  background: #1e293b;
+  color: #f1f5f9;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+.content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.content ul,
+.content ol {
+  padding-right: 2rem;
+  padding-left: 0;
+}
+
+.content li {
+  margin: 0.5rem 0;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .container {
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+}
+
+[data-theme='dark'] .translateButton {
+  background: #1e293b;
+  color: #34d399;
+}
+
+[data-theme='dark'] .translatedContent {
+  background: #1e293b;
+}
+
+[data-theme='dark'] .content {
+  color: #e2e8f0;
+}
+
+[data-theme='dark'] .content h1,
+[data-theme='dark'] .content h2,
+[data-theme='dark'] .content h3 {
+  color: #34d399;
+}
+
+[data-theme='dark'] .content code {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem 0;
+    position: sticky;
+    top: 130px;
+    z-index: 99;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .translateButton {
+    width: 100%;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .translatedContent {
+    margin-top: 1rem;
+  }
+  
+  .content {
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  
+  .contentHeader {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  [data-theme='dark'] .container {
+    background: rgba(30, 41, 59, 0.95);
+  }
+}

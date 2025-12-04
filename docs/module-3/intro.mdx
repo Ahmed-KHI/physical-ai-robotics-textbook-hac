@@ -1,0 +1,117 @@
+---
+sidebar_position: 1
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Module 3: The AI-Robot Brain (NVIDIA Isaac™)
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-3/intro" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+Advanced Perception and Training
+
+## 🎯 Module Overview
+
+**Duration**: Weeks 8-10 (3 weeks)  
+**Focus**: AI-powered robotics with NVIDIA Isaac platform
+
+NVIDIA Isaac is the AI robot platform that combines photorealistic simulation, hardware-accelerated perception, and advanced robot learning. It's the bridge between AI models and physical robots.
+
+## 🚀 What is NVIDIA Isaac?
+
+Isaac consists of three main components:
+
+### 1. Isaac Sim
+- Built on NVIDIA Omniverse
+- Photorealistic simulation using RTX ray tracing
+- Physics-accurate using PhysX
+- Synthetic data generation at scale
+
+### 2. Isaac ROS
+- Hardware-accelerated ROS 2 packages
+- GPU-powered perception algorithms
+- Visual SLAM (VSLAM)
+- Optimized for NVIDIA hardware
+
+### 3. Isaac SDK
+- Robot application framework
+- Pre-built AI models
+- Sensor processing pipelines
+- Robot navigation stack
+
+## 📚 What You'll Learn
+
+- ✅ Set up Isaac Sim for robot development
+- ✅ Create photorealistic environments
+- ✅ Generate synthetic training data
+- ✅ Implement hardware-accelerated VSLAM
+- ✅ Use Nav2 for autonomous navigation
+- ✅ Train robots with reinforcement learning
+- ✅ Deploy to real hardware (Jetson)
+
+## 📅 Weekly Breakdown
+
+### Week 8: Isaac Sim Fundamentals
+- Isaac Sim installation
+- USD (Universal Scene Description)
+- Asset creation and import
+- Python scripting API
+
+📖 [Week 8 Content →](/docs/module-3/week-8)
+
+### Week 9: Isaac ROS & Perception
+- Hardware-accelerated perception
+- Visual SLAM
+- Object detection
+- Depth estimation
+
+📖 [Week 9 Content →](/docs/module-3/week-9)
+
+### Week 10: Navigation & Deployment
+- Nav2 path planning
+- Obstacle avoidance
+- Jetson deployment
+- Sim-to-real pipeline
+
+📖 [Week 10 Content →](/docs/module-3/week-10)
+
+## 🎯 Module Project
+
+**Autonomous Warehouse Robot**
+
+Build complete system with:
+- Isaac Sim warehouse environment
+- Mobile manipulator robot
+- Visual SLAM navigation
+- Object detection and grasping
+- Deploy to Jetson Orin
+
+## 🌟 Why Isaac?
+
+**Performance:**
+- 100x faster than CPU-only simulation
+- Real-time physics with thousands of objects
+- Hardware acceleration for perception
+
+**Realism:**
+- RTX ray tracing for photorealistic rendering
+- Accurate physics (PhysX 5)
+- Realistic sensor models
+
+**Scalability:**
+- Generate millions of training examples
+- Parallel simulation environments
+- Cloud-native architecture
+
+## Real-World Users
+
+- 🏭 **BMW**: Factory automation
+- 📦 **Amazon**: Warehouse robots
+- 🚗 **Toyota**: Autonomous vehicles
+- 🏥 **Johnson & Johnson**: Surgical robots
+
+[Start Week 8 →](/docs/module-3/week-8)

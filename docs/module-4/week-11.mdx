@@ -1,0 +1,296 @@
+---
+sidebar_position: 2
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 11: Voice Control with Whisper
+
+Speech-to-Text for Robotics
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-4/week-11" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Integrate OpenAI Whisper
+- Process audio in ROS 2
+- Parse voice commands
+- Implement wake word detection
+- Support multiple languages
+
+## 🎤 OpenAI Whisper Setup
+
+### Install Dependencies
+
+```bash
+pip install openai pyaudio numpy
+```
+
+### Basic Whisper Integration
+
+```python
+from openai import OpenAI
+import pyaudio
+import wave
+
+client = OpenAI(api_key="your-api-key")
+
+def record_audio(duration=5):
+    """Record audio from microphone"""
+    CHUNK = 1024
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 16000
+    
+    p = pyaudio.PyAudio()
+    stream = p.open(format=FORMAT, channels=CHANNELS,
+                    rate=RATE, input=True,
+                    frames_per_buffer=CHUNK)
+    
+    frames = []
+    for _ in range(0, int(RATE / CHUNK * duration)):
+        data = stream.read(CHUNK)
+        frames.append(data)
+    
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+    
+    # Save to file
+    wf = wave.open("command.wav", 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+    
+    return "command.wav"
+
+def transcribe_audio(audio_file):
+    """Transcribe using Whisper"""
+    with open(audio_file, "rb") as f:
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=f,
+            language="en"
+        )
+    return transcript.text
+```
+
+## 🤖 ROS 2 Integration
+
+### Voice Command Node
+
+```python
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+import threading
+
+class VoiceCommandNode(Node):
+    def __init__(self):
+        super().__init__('voice_command_node')
+        
+        # Publisher for transcriptions
+        self.command_pub = self.create_publisher(String, 'voice_commands', 10)
+        
+        # Start listening thread
+        self.listening = True
+        self.thread = threading.Thread(target=self.listen_loop)
+        self.thread.start()
+        
+        self.get_logger().info('Voice command node started')
+    
+    def listen_loop(self):
+        """Continuous listening loop"""
+        while self.listening:
+            # Record audio
+            self.get_logger().info('Listening...')
+            audio_file = record_audio(duration=3)
+            
+            # Transcribe
+            try:
+                text = transcribe_audio(audio_file)
+                self.get_logger().info(f'Heard: {text}')
+                
+                # Publish
+                msg = String()
+                msg.data = text
+                self.command_pub.publish(msg)
+            except Exception as e:
+                self.get_logger().error(f'Transcription error: {e}')
+```
+
+## 🎯 Command Parsing
+
+### Natural Language Understanding
+
+```python
+from typing import Dict, Optional
+import re
+
+class CommandParser:
+    def __init__(self):
+        # Command patterns
+        self.patterns = {
+            'navigate': r'(go|move|navigate) to (.*)',
+            'pick': r'(pick|grab|grasp) (up )?(the )?(.*)',
+            'place': r'(place|put) (.*) (on|in) (.*)',
+            'find': r'(find|locate|search for) (.*)',
+            'follow': r'follow (.*)',
+        }
+    
+    def parse(self, text: str) -> Optional[Dict]:
+        """Parse voice command into structured action"""
+        text = text.lower()
+        
+        for action, pattern in self.patterns.items():
+            match = re.search(pattern, text)
+            if match:
+                return self.create_action(action, match)
+        
+        return None
+    
+    def create_action(self, action: str, match) -> Dict:
+        if action == 'navigate':
+            return {
+                'action': 'navigate',
+                'target': match.group(2)
+            }
+        elif action == 'pick':
+            return {
+                'action': 'pick',
+                'object': match.group(4)
+            }
+        elif action == 'place':
+            return {
+                'action': 'place',
+                'object': match.group(2),
+                'location': match.group(4)
+            }
+        elif action == 'find':
+            return {
+                'action': 'find',
+                'target': match.group(2)
+            }
+        elif action == 'follow':
+            return {
+                'action': 'follow',
+                'target': match.group(1)
+            }
+
+# Usage
+parser = CommandParser()
+
+commands = [
+    "Go to the kitchen",
+    "Pick up the red cup",
+    "Place the book on the shelf",
+    "Find the remote control",
+    "Follow the person"
+]
+
+for cmd in commands:
+    action = parser.parse(cmd)
+    print(f"{cmd} → {action}")
+```
+
+**Output:**
+```
+Go to the kitchen → {'action': 'navigate', 'target': 'kitchen'}
+Pick up the red cup → {'action': 'pick', 'object': 'red cup'}
+Place the book on the shelf → {'action': 'place', 'object': 'book', 'location': 'shelf'}
+```
+
+## 🔊 Wake Word Detection
+
+### Simple Wake Word
+
+```python
+class WakeWordDetector:
+    def __init__(self, wake_word="robot"):
+        self.wake_word = wake_word.lower()
+    
+    def detect(self, text: str) -> bool:
+        """Check if wake word is present"""
+        return self.wake_word in text.lower()
+
+class VoiceControlNode(Node):
+    def __init__(self):
+        super().__init__('voice_control')
+        self.detector = WakeWordDetector("hey robot")
+        self.parser = CommandParser()
+        
+    def listen_loop(self):
+        while self.listening:
+            audio = record_audio(duration=3)
+            text = transcribe_audio(audio)
+            
+            # Check wake word
+            if self.detector.detect(text):
+                self.get_logger().info('Wake word detected!')
+                
+                # Parse command
+                command = self.parser.parse(text)
+                if command:
+                    self.execute_command(command)
+```
+
+## 🌍 Multi-Language Support
+
+### Urdu Translation
+
+```python
+def transcribe_multilingual(audio_file, target_language='en'):
+    """Support multiple languages"""
+    with open(audio_file, "rb") as f:
+        # Transcribe
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=f,
+            language=None  # Auto-detect
+        )
+    
+    text = transcript.text
+    
+    # Translate to English if needed
+    if target_language == 'en':
+        translation = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Translate to English"},
+                {"role": "user", "content": text}
+            ]
+        )
+        text = translation.choices[0].message.content
+    
+    return text
+
+# Example: Urdu command
+audio = record_audio()
+text = transcribe_multilingual(audio, target_language='en')
+print(f"Translated: {text}")
+```
+
+## 💪 Week 11 Project
+
+**Voice-Controlled Navigation**
+
+Build system with:
+- Wake word detection ("Hey Robot")
+- Navigation commands ("Go to kitchen")
+- Object recognition ("Find the cup")
+- Urdu language support
+- Real-time feedback
+
+**Requirements:**
+- Less than 2s latency (speech → action)
+- 95%+ command accuracy
+- Support 10+ locations
+- Handle noisy environments
+
+[Continue to Week 12 →](/docs/module-4/week-12)

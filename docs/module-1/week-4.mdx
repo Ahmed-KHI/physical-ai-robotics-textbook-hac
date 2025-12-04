@@ -1,0 +1,111 @@
+---
+sidebar_position: 5
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 4: URDF and Robot Description
+
+Modeling Your Robot
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/week-4" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Understand URDF (Unified Robot Description Format)
+- Model robot geometry and kinematics
+- Visualize robots in RViz
+- Work with transforms (tf2)
+
+## 🤖 URDF Basics
+
+URDF describes robot structure in XML:
+
+```xml
+<?xml version="1.0"?>
+<robot name="simple_robot">
+  
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.5 0.3 0.1"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+      </material>
+    </visual>
+  </link>
+  
+  <!-- Wheel Joint -->
+  <joint name="wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_link"/>
+    <origin xyz="0.2 0 -0.1"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  
+  <!-- Wheel Link -->
+  <link name="wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+  
+</robot>
+```
+
+## 👁️ Visualizing in RViz
+
+```bash
+# Launch robot state publisher
+ros2 run robot_state_publisher robot_state_publisher \
+  --ros-args -p robot_description:="$(cat robot.urdf)"
+
+# Open RViz
+rviz2
+```
+
+In RViz:
+1. Set Fixed Frame to `base_link`
+2. Add → RobotModel
+3. See your robot!
+
+## 🔄 TF2 Transforms
+
+Track coordinate frames:
+
+```python
+from tf2_ros import TransformBroadcaster
+from geometry_msgs.msg import TransformStamped
+
+# Broadcast transform
+t = TransformStamped()
+t.header.stamp = self.get_clock().now().to_msg()
+t.header.frame_id = 'world'
+t.child_frame_id = 'robot'
+t.transform.translation.x = 1.0
+t.transform.translation.y = 2.0
+t.transform.rotation.w = 1.0
+
+self.tf_broadcaster.sendTransform(t)
+```
+
+## 💪 Week 4 Project
+
+Create URDF model of:
+- 4-DOF robot arm
+- With collision geometry
+- Visualize in RViz
+- Publish joint states
+
+[Continue to Week 5 →](/docs/module-1/week-5)

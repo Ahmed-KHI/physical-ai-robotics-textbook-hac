@@ -1,0 +1,117 @@
+---
+sidebar_position: 3
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 2: ROS 2 Core Concepts
+
+Deep Dive into Communication Patterns
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/week-2" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Master Quality of Service (QoS) settings
+- Create custom message types
+- Implement services for request-response communication
+- Understand message interfaces and definitions
+- Work with parameters for dynamic configuration
+
+## 📡 Quality of Service (QoS)
+
+QoS policies control how data flows between publishers and subscribers.
+
+### Common QoS Profiles
+
+```python
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
+
+# Sensor data (fast, lossy OK)
+sensor_qos = QoSProfile(
+    reliability=ReliabilityPolicy.BEST_EFFORT,
+    history=HistoryPolicy.KEEP_LAST,
+    depth=10
+)
+
+# Command data (reliable, no loss)
+command_qos = QoSProfile(
+    reliability=ReliabilityPolicy.RELIABLE,
+    history=HistoryPolicy.KEEP_LAST,
+    depth=10
+)
+```
+
+## 🔧 Services
+
+Services provide synchronous request-response communication.
+
+### Example: Add Two Numbers Service
+
+**Server:**
+```python
+from example_interfaces.srv import AddTwoInts
+
+class AddService(Node):
+    def __init__(self):
+        super().__init__('add_service')
+        self.srv = self.create_service(
+            AddTwoInts, 
+            'add_two_ints', 
+            self.add_callback
+        )
+    
+    def add_callback(self, request, response):
+        response.sum = request.a + request.b
+        self.get_logger().info(f'{request.a} + {request.b} = {response.sum}')
+        return response
+```
+
+**Client:**
+```python
+client = self.create_client(AddTwoInts, 'add_two_ints')
+request = AddTwoInts.Request()
+request.a = 5
+request.b = 7
+future = client.call_async(request)
+```
+
+## 📊 Custom Messages
+
+Create your own message types for specific data structures.
+
+### Define Custom Message
+
+`msg/RobotStatus.msg`:
+```
+float32 battery_level
+float32 temperature
+string[] active_sensors
+bool is_moving
+```
+
+### Use in Code
+
+```python
+from my_package.msg import RobotStatus
+
+msg = RobotStatus()
+msg.battery_level = 85.5
+msg.temperature = 42.3
+msg.active_sensors = ['camera', 'lidar']
+msg.is_moving = True
+```
+
+## 💪 Week 2 Project
+
+Build a robot control system with:
+- Motor speed service
+- Battery status publisher
+- Emergency stop subscriber
+- Custom status messages
+
+[Continue to Week 3 →](/docs/module-1/week-3)

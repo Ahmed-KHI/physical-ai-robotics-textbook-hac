@@ -1,0 +1,418 @@
+---
+sidebar_position: 4
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 13: Capstone Project
+
+Building Complete VLA System
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-4/week-13" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Capstone Overview
+
+**Project**: AI Home Assistant Robot
+
+Integrate everything from Modules 1-4 into production-ready system:
+- ✅ ROS 2 architecture
+- ✅ Isaac Sim simulation
+- ✅ Voice control (Whisper)
+- ✅ Task planning (GPT-4)
+- ✅ Autonomous navigation
+- ✅ Object manipulation
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────────────────────────────┐
+│          Human Interface                │
+│  (Voice Commands, Visual Feedback)      │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────┼────────────────────────┐
+│         Whisper Speech-to-Text          │
+│         GPT-4 Task Planning             │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────┼────────────────────────┐
+│           ROS 2 Middleware              │
+│  Navigation | Perception | Manipulation │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────┼────────────────────────┐
+│         Robot Hardware/Simulation       │
+│    Motors | Sensors | Actuators         │
+└─────────────────────────────────────────┘
+```
+
+## 📦 Complete Implementation
+
+### 1. Main Robot Controller
+
+```python
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist, PoseStamped
+from sensor_msgs.msg import Image
+import cv2
+from cv_bridge import CvBridge
+
+class HomeAssistantRobot(Node):
+    def __init__(self):
+        super().__init__('home_assistant')
+        
+        # Components
+        self.voice = VoiceCommandNode()
+        self.planner = LLMTaskPlanner()
+        self.navigator = NavigationController()
+        self.manipulator = ManipulatorController()
+        self.vision = VisionProcessor()
+        
+        # State
+        self.current_task = None
+        self.current_plan = []
+        self.world_state = {}
+        
+        # Subscribers
+        self.create_subscription(String, 'voice_commands', 
+                                self.voice_callback, 10)
+        self.create_subscription(Image, 'camera/image_raw',
+                                self.vision_callback, 10)
+        
+        # Publishers
+        self.status_pub = self.create_publisher(String, 'robot_status', 10)
+        
+        self.get_logger().info('🤖 Home Assistant Robot ready!')
+    
+    def voice_callback(self, msg):
+        """Process voice command"""
+        command = msg.data
+        self.get_logger().info(f'Command: {command}')
+        
+        # Generate plan
+        self.current_plan = self.planner.plan(command)
+        self.current_task = command
+        
+        # Execute
+        self.execute_plan()
+    
+    def execute_plan(self):
+        """Execute current action plan"""
+        for action in self.current_plan:
+            self.get_logger().info(f'Executing: {action}')
+            
+            success = self.execute_action(action)
+            
+            if not success:
+                # Replan
+                self.get_logger().warning('Action failed, replanning...')
+                self.replan()
+                return
+            
+            # Update status
+            self.publish_status(f"Completed: {action['action']}")
+        
+        self.publish_status(f"Task complete: {self.current_task}")
+    
+    def execute_action(self, action):
+        """Execute single action"""
+        action_type = action['action']
+        
+        if action_type == 'navigate':
+            return self.navigator.navigate_to(action['target'])
+        
+        elif action_type == 'pick':
+            return self.manipulator.pick_object(action['object'])
+        
+        elif action_type == 'place':
+            return self.manipulator.place_object(
+                action['object'], action['location']
+            )
+        
+        elif action_type == 'scan':
+            self.vision.scan_environment()
+            return True
+        
+        return False
+```
+
+### 2. Vision-Language Integration
+
+```python
+class VisionLanguageController:
+    def __init__(self):
+        self.client = OpenAI()
+        self.bridge = CvBridge()
+    
+    def analyze_scene(self, image, query: str):
+        """Analyze scene with GPT-4 Vision"""
+        # Convert ROS image to base64
+        cv_image = self.bridge.imgmsg_to_cv2(image, "bgr8")
+        _, buffer = cv2.imencode('.jpg', cv_image)
+        image_b64 = base64.b64encode(buffer).decode()
+        
+        response = self.client.chat.completions.create(
+            model="gpt-4-vision-preview",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": query},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_b64}"
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        return response.choices[0].message.content
+    
+    def detect_objects(self, image):
+        """Detect and describe objects"""
+        result = self.analyze_scene(
+            image,
+            "List all objects you see with their locations (left/center/right)"
+        )
+        return self.parse_object_list(result)
+    
+    def find_object(self, image, object_name: str):
+        """Find specific object"""
+        result = self.analyze_scene(
+            image,
+            f"Where is the {object_name}? Describe its location precisely."
+        )
+        return result
+```
+
+### 3. Complete Task Examples
+
+#### Task 1: "Bring me a drink"
+
+```python
+def task_bring_drink(self):
+    # 1. Voice command
+    command = "Bring me a drink from the kitchen"
+    
+    # 2. GPT-4 planning
+    plan = [
+        {'action': 'navigate', 'target': 'kitchen'},
+        {'action': 'scan'},  # Use vision
+        {'action': 'pick', 'object': 'bottle'},
+        {'action': 'navigate', 'target': 'user'},
+        {'action': 'place', 'object': 'bottle', 'location': 'table'}
+    ]
+    
+    # 3. Execute with vision
+    self.navigate_to('kitchen')
+    
+    # 4. Use GPT-4 Vision to find drink
+    image = self.get_camera_image()
+    drink_location = self.vision.find_object(image, 'drink bottle')
+    
+    # 5. Pick up
+    self.manipulator.pick_at_location(drink_location)
+    
+    # 6. Return to user
+    self.navigate_to('user')
+    self.manipulator.place_on_table()
+    
+    # 7. Verbal confirmation
+    self.speak("Here's your drink!")
+```
+
+#### Task 2: "Clean the living room"
+
+```python
+def task_clean_room(self):
+    # 1. Navigate to room
+    self.navigate_to('living_room')
+    
+    # 2. Scan environment
+    image = self.get_camera_image()
+    
+    # 3. Ask GPT-4 what needs cleaning
+    analysis = self.vision.analyze_scene(
+        image,
+        "What objects are out of place? What needs to be cleaned?"
+    )
+    
+    # 4. Generate cleaning plan
+    plan = self.planner.plan(f"Clean: {analysis}")
+    
+    # 5. Execute each subtask
+    for action in plan:
+        self.execute_action(action)
+```
+
+## 🎮 Multi-Modal Interaction
+
+### Voice + Vision + Action
+
+```python
+class MultiModalController:
+    def handle_contextual_command(self, voice_text, image):
+        """Handle commands requiring visual context"""
+        
+        # Example: "Pick up the red one"
+        if "the red one" in voice_text.lower():
+            # Use vision to identify red objects
+            objects = self.vision.detect_objects(image)
+            red_objects = [o for o in objects if 'red' in o['color']]
+            
+            if len(red_objects) == 1:
+                target = red_objects[0]
+                return self.manipulator.pick_object(target['name'])
+            else:
+                self.speak("I see multiple red objects. Which one?")
+        
+        # Example: "Put it there" (pointing gesture)
+        if "there" in voice_text.lower():
+            # Detect pointing gesture from camera
+            gesture = self.detect_pointing_gesture(image)
+            location = self.gesture_to_location(gesture)
+            return self.manipulator.place_at(location)
+```
+
+## 🏆 Evaluation Criteria
+
+### Performance Metrics
+
+```python
+class PerformanceEvaluator:
+    def evaluate_system(self):
+        metrics = {
+            'command_accuracy': self.test_voice_commands(),
+            'task_success_rate': self.test_task_execution(),
+            'response_time': self.measure_latency(),
+            'safety_score': self.evaluate_safety(),
+        }
+        return metrics
+    
+    def test_voice_commands(self):
+        """Test 100 voice commands"""
+        commands = [
+            "Go to the kitchen",
+            "Pick up the cup",
+            # ... 98 more
+        ]
+        
+        correct = 0
+        for cmd in commands:
+            result = self.system.process_command(cmd)
+            if self.is_correct(result, cmd):
+                correct += 1
+        
+        return correct / len(commands)
+```
+
+**Target Metrics:**
+- Voice accuracy: >95%
+- Task success: >90%
+- Response time: Less than 3 seconds
+- Safety incidents: 0
+
+## 📹 Demo Requirements
+
+### Create 90-Second Video
+
+**Structure:**
+
+**Seconds 0-15: Introduction**
+- "AI Home Assistant Robot"
+- Show robot in environment
+
+**Seconds 15-45: Core Features**
+- Voice command demo
+- Task execution (pick & place)
+- Navigation
+
+**Seconds 45-75: Advanced Features**
+- Multi-step task
+- Adaptive replanning
+- Vision-language integration
+
+**Seconds 75-90: Results**
+- Performance metrics
+- Real-world impact
+- Call to action
+
+### Recording Tips
+
+```bash
+# Screen recording with OBS
+obs --startrecording
+
+# Narration with NotebookLM
+# 1. Upload project documentation
+# 2. Generate Audio Overview
+# 3. Download narration MP3
+
+# Editing with DaVinci Resolve (free)
+```
+
+## 🎯 Final Checklist
+
+- [ ] All modules integrated
+- [ ] Voice control working
+- [ ] GPT-4 planning implemented
+- [ ] Navigation autonomous
+- [ ] Manipulation functional
+- [ ] Vision-language integration
+- [ ] Safety systems active
+- [ ] Performance meets targets
+- [ ] Demo video recorded
+- [ ] Code documented
+- [ ] README complete
+- [ ] Deployed to GitHub Pages
+
+## 🌟 Bonus Challenges
+
+### +50 Points Each
+
+1. **Multi-Robot Coordination**
+   - Control 2+ robots simultaneously
+   - Collaborative task execution
+
+2. **Learning from Demonstration**
+   - Record human demonstrations
+   - Robot learns new tasks
+
+3. **Edge Deployment**
+   - Full system on Jetson Orin
+   - Real-time performance
+
+## 🎓 Congratulations!
+
+You've completed the Physical AI & Humanoid Robotics course!
+
+**Next Steps:**
+- Build your own robot
+- Contribute to open-source
+- Join robotics community
+- Apply to companies
+
+**Recommended Projects:**
+- Autonomous delivery robot
+- Robotic arm for manufacturing
+- Healthcare assistant
+- Search and rescue bot
+
+---
+
+## 📚 Resources
+
+- [OpenAI Whisper Docs](https://platform.openai.com/docs/guides/speech-to-text)
+- [GPT-4 API Reference](https://platform.openai.com/docs/api-reference)
+- [ROS 2 Documentation](https://docs.ros.org)
+- [Isaac Sim Guide](https://docs.omniverse.nvidia.com/isaacsim)
+
+[Back to Course Home](/) | [View FAQ](/docs/faq)

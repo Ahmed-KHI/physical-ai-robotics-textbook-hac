@@ -1,0 +1,142 @@
+---
+sidebar_position: 1
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Module 4: Vision-Language-Action (VLA)
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-4/intro" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+Giving Robots Intelligence
+
+## 🎯 Module Overview
+
+**Duration**: Weeks 11-13 (3 weeks)  
+**Focus**: Integrating LLMs with robotic control
+
+Vision-Language-Action models represent the convergence of computer vision, natural language processing, and robot control. They enable robots to understand human commands, reason about their environment, and execute complex tasks.
+
+## 🧠 What is VLA?
+
+**Components:**
+1. **Vision**: Camera input processing
+2. **Language**: Natural language understanding (GPT-4, Whisper)
+3. **Action**: Robot control policies
+
+**Flow:**
+```
+Human Speech → Whisper → GPT-4 → Action Planner → Robot Control
+                 ↓           ↓
+              Text      Task Plan
+```
+
+## 🌟 Why VLA Matters
+
+**Traditional Robotics:**
+```python
+# Fixed behavior
+if object_detected():
+    grasp_object()
+```
+
+**VLA Robotics:**
+```python
+# Natural commands
+"Please pick up the red cup and place it on the table"
+→ GPT-4 generates plan
+→ Robot executes autonomously
+```
+
+## 📚 What You'll Learn
+
+- ✅ Integrate Whisper for voice control
+- ✅ Use GPT-4 for task planning
+- ✅ Implement action primitives
+- ✅ Build semantic understanding
+- ✅ Create multi-modal systems
+- ✅ Deploy end-to-end VLA
+
+## 📅 Weekly Breakdown
+
+### Week 11: Voice Control with Whisper
+- Speech-to-text integration
+- ROS 2 audio processing
+- Command parsing
+- Multi-language support
+
+📖 [Week 11 Content →](/docs/module-4/week-11)
+
+### Week 12: LLM-Powered Planning
+- GPT-4 integration
+- Task decomposition
+- Semantic reasoning
+- Safety constraints
+
+📖 [Week 12 Content →](/docs/module-4/week-12)
+
+### Week 13: Capstone Project
+- Full VLA system
+- Multi-modal interaction
+- Real-world deployment
+- Performance evaluation
+
+📖 [Week 13 Content →](/docs/module-4/week-13)
+
+## 🎯 Module Project
+
+**AI Home Assistant Robot**
+
+Features:
+- Voice command understanding
+- Object recognition
+- Task planning with GPT-4
+- Manipulation and navigation
+- Natural language responses
+
+## 🏆 Real-World Applications
+
+**Household Robots:**
+- "Bring me a bottle of water"
+- "Clean the living room"
+- "Find my keys"
+
+**Industrial Automation:**
+- "Inspect the assembly line"
+- "Sort defective parts"
+- "Organize the warehouse"
+
+**Healthcare:**
+- "Bring medication to room 302"
+- "Assist with patient transfer"
+
+## 🚀 State-of-the-Art Models
+
+### Google RT-2
+- 55B parameter VLA model
+- 6000+ robotic skills
+- Trained on web data + robot demos
+
+### OpenAI (Rumored)
+- Multimodal GPT integration
+- Physical reasoning
+- Real-world manipulation
+
+### Academic Research
+- Stanford Mobile ALOHA
+- MIT Diffusion Policy
+- Berkeley RT-X
+
+## Prerequisites
+
+Before starting:
+- ✅ Completed Modules 1-3
+- ✅ OpenAI API key
+- ✅ Microphone for voice input
+- ✅ Robot (sim or hardware)
+
+[Start Week 11 →](/docs/module-4/week-11)

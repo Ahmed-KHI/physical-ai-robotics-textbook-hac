@@ -1,0 +1,243 @@
+---
+sidebar_position: 1
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Module 1: The Robotic Nervous System (ROS 2)
+
+Learn the Middleware that Powers Modern Robotics
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/intro" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Module Overview
+
+**Duration**: Weeks 1-5 (5 weeks)  
+**Focus**: ROS 2 fundamentals and robot control architecture
+
+Welcome to Module 1! In this module, you'll master **ROS 2 (Robot Operating System 2)**, the industry-standard middleware for building complex robotic systems. Think of ROS 2 as the nervous system of a robot - it enables different parts (sensors, actuators, controllers) to communicate and coordinate seamlessly.
+
+## 🧠 What is ROS 2?
+
+ROS 2 is not an operating system despite its name. It's a **middleware framework** that provides:
+
+- **Communication infrastructure** between robot components
+- **Tools and libraries** for common robotics tasks
+- **Standardized interfaces** for sensors and actuators
+- **Development and debugging tools** for robot applications
+
+### Why ROS 2 (not ROS 1)?
+
+ROS 2 improves upon ROS 1 with:
+- ✅ **Real-time capable** - Critical for safety
+- ✅ **Multi-robot support** - Built-in from the ground up
+- ✅ **Better security** - Encrypted communication
+- ✅ **Cross-platform** - Windows, Linux, macOS
+- ✅ **Production-ready** - Used in commercial robots
+
+## 📚 What You'll Learn
+
+By the end of this module, you will:
+
+1. ✅ Understand ROS 2 architecture and design patterns
+2. ✅ Create nodes that communicate via topics and services
+3. ✅ Build ROS 2 packages with Python
+4. ✅ Work with URDF files to describe robot geometry
+5. ✅ Use launch files to orchestrate multi-node systems
+6. ✅ Implement actions for long-running tasks
+7. ✅ Debug and visualize ROS 2 systems with rqt tools
+
+## 📅 Weekly Breakdown
+
+### Week 1: Introduction to ROS 2
+**Learning Objectives**:
+- Understand distributed robotics systems
+- Install and configure ROS 2 Humble
+- Create your first ROS 2 node
+- Publish and subscribe to topics
+
+**Deliverable**: Simple talker-listener node pair
+
+📖 [Week 1 Content →](/docs/module-1/week-1)
+
+---
+
+### Week 2: ROS 2 Core Concepts
+**Learning Objectives**:
+- Deep dive into nodes, topics, messages
+- Understand Quality of Service (QoS)
+- Work with custom message types
+- Implement service clients and servers
+
+**Deliverable**: Temperature sensor simulator with service interface
+
+📖 [Week 2 Content →](/docs/module-1/week-2)
+
+---
+
+### Week 3: ROS 2 Packages and Build System
+**Learning Objectives**:
+- Create ROS 2 packages with colcon
+- Organize code with package structure
+- Write launch files for complex systems
+- Use parameters for configuration
+
+**Deliverable**: Multi-node robot control package
+
+📖 [Week 3 Content →](/docs/module-1/week-3)
+
+---
+
+### Week 4: URDF and Robot Description
+**Learning Objectives**:
+- Understand URDF (Unified Robot Description Format)
+- Model robot kinematics and geometry
+- Visualize robots in RViz
+- Work with joint states and transforms (tf2)
+
+**Deliverable**: URDF model of a simple humanoid robot
+
+📖 [Week 4 Content →](/docs/module-1/week-4)
+
+---
+
+### Week 5: Actions and Advanced Patterns
+**Learning Objectives**:
+- Implement ROS 2 actions for long-running tasks
+- Understand action clients and servers
+- Use behavior trees for robot decision-making
+- Best practices for ROS 2 development
+
+**Deliverable**: Navigation action for mobile robot
+
+📖 [Week 5 Content →](/docs/module-1/week-5)
+
+---
+
+## 🎯 Module Project
+
+**Build a ROS 2 Controlled Robot Arm**
+
+You'll create a complete ROS 2 system that:
+- 🤖 Models a 4-DOF robot arm in URDF
+- 📡 Publishes joint states
+- 🎮 Accepts movement commands via topics
+- 🔧 Provides a service for inverse kinematics
+- 📊 Visualizes in RViz
+- 🚀 Launches with a single command
+
+## 🛠️ Tools You'll Use
+
+### Core ROS 2 Tools
+- **rqt_graph**: Visualize node connections
+- **rqt_console**: View log messages
+- **ros2 topic**: Inspect topic data
+- **ros2 service**: Call services
+- **ros2 node**: Manage nodes
+
+### Development Tools
+- **colcon**: Build system
+- **ament**: Package management
+- **RViz**: 3D visualization
+- **PlotJuggler**: Data plotting
+
+## 📖 Key Concepts
+
+### 1. Nodes
+Independent processes that perform specific tasks. Examples:
+- Camera driver node
+- Object detection node
+- Motor controller node
+
+### 2. Topics
+Named channels for asynchronous data streaming:
+```
+/camera/image_raw        → Image messages
+/robot/joint_states     → Joint positions
+/cmd_vel                → Velocity commands
+```
+
+### 3. Services
+Synchronous request-response communication:
+```
+/reset_simulation       → Resets environment
+/get_inverse_kinematics → Calculates joint angles
+```
+
+### 4. Actions
+For long-running tasks with feedback:
+```
+/navigate_to_goal       → Move robot to position
+/grasp_object          → Pick up an object
+```
+
+## 🎓 Prerequisites
+
+Before starting this module, ensure you have:
+- ✅ Ubuntu 22.04 LTS installed
+- ✅ ROS 2 Humble installed
+- ✅ Basic Python knowledge
+- ✅ Terminal/command line comfort
+
+📖 [Software Setup Guide →](/docs/setup)
+
+## 💻 Hands-On Exercises
+
+Each week includes:
+- **Tutorials**: Step-by-step guides
+- **Code Examples**: Working implementations
+- **Exercises**: Practice problems
+- **Challenges**: Advanced tasks for bonus points
+
+## 📊 Assessment
+
+You'll be evaluated on:
+- **Weekly Quizzes** (20%): Understanding concepts
+- **Coding Exercises** (40%): Implementing nodes and packages
+- **Module Project** (40%): Complete robot arm system
+
+## 🌟 Real-World Applications
+
+ROS 2 powers robots in:
+- 🏭 **Manufacturing**: Industrial robot arms (Universal Robots, ABB)
+- 🚗 **Autonomous Vehicles**: Self-driving cars (Autoware, Apollo)
+- 🏥 **Healthcare**: Surgical robots (da Vinci)
+- 🏠 **Service Robots**: Delivery robots (Starship, Boston Dynamics)
+- 🚁 **Drones**: Aerial platforms (PX4, ArduPilot)
+
+## 💡 Study Tips
+
+1. **Practice Daily**: ROS 2 is hands-on. Code every day.
+2. **Use the Docs**: Official ROS 2 documentation is excellent
+3. **Visualize Everything**: Use rqt_graph and RViz constantly
+4. **Ask Questions**: Use the AI chatbot when stuck
+5. **Join Community**: ROS Discourse and Discord are helpful
+
+## 🔗 Additional Resources
+
+- [ROS 2 Official Documentation](https://docs.ros.org/en/humble/)
+- [ROS 2 Tutorials](https://docs.ros.org/en/humble/Tutorials.html)
+- [The Robotics Back-End Blog](https://roboticsbackend.com/)
+- [The Construct (ROS Courses)](https://www.theconstructsim.com/)
+
+## 🚀 Ready to Start?
+
+Let's begin with Week 1 where you'll create your first ROS 2 node!
+
+<div style={{textAlign: 'center', margin: '2rem 0'}}>
+  <a href="/docs/module-1/week-1" className="button button--primary button--lg">
+    Start Week 1 →
+  </a>
+</div>
+
+---
+
+**💬 Need Help?** Use the AI Assistant to ask questions about ROS 2 concepts!
+
+**🎯 Personalize Content**: Sign in to adapt this content to your skill level (beginner/intermediate/advanced).
+
+**🌐 Translate**: Click the translate button above to view this content in Urdu.

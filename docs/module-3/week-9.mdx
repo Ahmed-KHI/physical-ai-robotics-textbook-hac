@@ -1,0 +1,225 @@
+---
+sidebar_position: 3
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 9: Isaac ROS & Perception
+
+Hardware-Accelerated Robot Vision
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-3/week-9" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Install Isaac ROS packages
+- Implement Visual SLAM
+- Run object detection
+- Process depth data
+- Optimize with GPU acceleration
+
+## 🚀 Isaac ROS Setup
+
+### Install Dependencies
+
+```bash
+# Install CUDA (if not already)
+sudo apt install cuda-toolkit-12-3
+
+# Install Isaac ROS workspace
+mkdir -p ~/workspaces/isaac_ros-dev/src
+cd ~/workspaces/isaac_ros-dev/src
+
+# Clone repositories
+git clone https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common.git
+git clone https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_visual_slam.git
+git clone https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_object_detection.git
+```
+
+### Build Workspace
+
+```bash
+cd ~/workspaces/isaac_ros-dev
+colcon build --symlink-install
+source install/setup.bash
+```
+
+## 👁️ Visual SLAM
+
+### Launch vSLAM
+
+```bash
+ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam.launch.py
+```
+
+### Configuration
+
+```yaml
+# visual_slam_params.yaml
+visual_slam:
+  ros__parameters:
+    map_frame: "map"
+    odom_frame: "odom"
+    base_frame: "base_link"
+    enable_observations_view: true
+    enable_landmarks_view: true
+    enable_imu_fusion: true
+```
+
+### Python API
+
+```python
+import rclpy
+from nav_msgs.msg import Odometry
+
+class SLAMListener(Node):
+    def __init__(self):
+        super().__init__('slam_listener')
+        self.subscription = self.create_subscription(
+            Odometry,
+            '/visual_slam/tracking/odometry',
+            self.odom_callback,
+            10
+        )
+    
+    def odom_callback(self, msg):
+        pos = msg.pose.pose.position
+        self.get_logger().info(f'Position: x={pos.x:.2f}, y={pos.y:.2f}, z={pos.z:.2f}')
+```
+
+## 🎯 Object Detection
+
+### DNN-based Detection
+
+```bash
+# Launch DOPE (Deep Object Pose Estimation)
+ros2 launch isaac_ros_dope isaac_ros_dope.launch.py \
+  model_file_path:=/path/to/model.onnx
+```
+
+### Custom Detector
+
+```python
+from isaac_ros_tensor_rt import TRTInference
+
+class ObjectDetector(Node):
+    def __init__(self):
+        super().__init__('object_detector')
+        
+        # TensorRT inference
+        self.trt_infer = TRTInference(
+            model_path='model.plan',
+            input_names=['input'],
+            output_names=['boxes', 'scores', 'classes']
+        )
+        
+        # Subscribe to images
+        self.create_subscription(
+            Image, '/camera/image_raw',
+            self.image_callback, 10
+        )
+    
+    def image_callback(self, msg):
+        # Preprocess
+        input_tensor = self.preprocess(msg)
+        
+        # Inference
+        outputs = self.trt_infer.infer(input_tensor)
+        
+        # Postprocess
+        detections = self.postprocess(outputs)
+        self.publish_detections(detections)
+```
+
+## 📏 Depth Estimation
+
+### Stereo Depth
+
+```bash
+ros2 launch isaac_ros_stereo_image_proc stereo_image_proc.launch.py
+```
+
+### ESS (Elbrus Stereo System)
+
+```python
+# Launch ESS depth estimation
+ros2 launch isaac_ros_ess disparity.launch.py \
+  engine_file_path:=/path/to/ess.engine
+```
+
+### Point Cloud Generation
+
+```python
+from sensor_msgs.msg import PointCloud2
+import numpy as np
+
+class DepthToPointCloud(Node):
+    def __init__(self):
+        super().__init__('depth_to_pc')
+        
+        # Subscribe to depth
+        self.create_subscription(
+            Image, '/depth/image',
+            self.depth_callback, 10
+        )
+        
+        # Publish point cloud
+        self.pc_pub = self.create_publisher(
+            PointCloud2, '/pointcloud', 10
+        )
+    
+    def depth_callback(self, depth_msg):
+        # Convert to point cloud
+        pc = self.depth_to_pointcloud(depth_msg)
+        self.pc_pub.publish(pc)
+```
+
+## ⚡ GPU Acceleration
+
+### CUDA Optimization
+
+```python
+import cupy as cp  # GPU-accelerated NumPy
+
+def process_image_gpu(image):
+    # Transfer to GPU
+    gpu_image = cp.asarray(image)
+    
+    # GPU operations
+    filtered = cp.ndimage.gaussian_filter(gpu_image, sigma=2)
+    edges = cp.abs(cp.gradient(filtered))
+    
+    # Transfer back to CPU
+    result = cp.asnumpy(edges)
+    return result
+```
+
+### Performance Comparison
+
+```
+CPU Processing: 150ms per frame (6.7 FPS)
+GPU Processing: 8ms per frame (125 FPS)
+Speedup: 18.75x
+```
+
+## 💪 Week 9 Project
+
+**Vision-Based Navigation System**
+
+Build system with:
+- Visual SLAM for localization
+- Object detection for obstacles
+- Depth estimation for 3D mapping
+- Real-time performance (30+ FPS)
+- Integrated with Nav2
+
+**Requirements:**
+- Run on Jetson Orin (edge deployment)
+- All algorithms GPU-accelerated
+- ROS 2 visualization in RViz
+
+[Continue to Week 10 →](/docs/module-3/week-10)

@@ -1,0 +1,83 @@
+---
+sidebar_position: 4
+---
+
+import PersonalizationButton from '@site/src/components/PersonalizationButton';
+import TranslationButton from '@site/src/components/TranslationButton';
+
+# Week 3: ROS 2 Packages and Build System
+
+Professional Project Organization
+
+<div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap'}}>
+  <PersonalizationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} filePath="/docs/module-1/week-3" />
+  <TranslationButton content={typeof window !== 'undefined' ? document.querySelector('article')?.innerText || '' : ''} />
+</div>
+
+## 🎯 Learning Objectives
+
+- Create ROS 2 packages with proper structure
+- Use colcon build system
+- Write launch files
+- Manage parameters and configuration
+
+## 📦 Creating a Package
+
+```bash
+cd ~/ros2_ws/src
+ros2 pkg create --build-type ament_python my_robot_pkg \
+  --dependencies rclpy std_msgs sensor_msgs
+```
+
+## 🚀 Launch Files
+
+Launch multiple nodes with one command:
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='my_robot_pkg',
+            executable='sensor_node',
+            name='sensor',
+            parameters=[{'frequency': 10}]
+        ),
+        Node(
+            package='my_robot_pkg',
+            executable='controller_node',
+            name='controller'
+        ),
+    ])
+```
+
+Run with:
+```bash
+ros2 launch my_robot_pkg robot.launch.py
+```
+
+## ⚙️ Parameters
+
+Make nodes configurable:
+
+```python
+self.declare_parameter('max_speed', 1.0)
+max_speed = self.get_parameter('max_speed').value
+```
+
+Set from command line:
+```bash
+ros2 run my_pkg my_node --ros-args -p max_speed:=2.0
+```
+
+## 💪 Week 3 Project
+
+Create a complete package with:
+- Multiple nodes
+- Launch file
+- Parameter configuration
+- Organized code structure
+
+[Continue to Week 4 →](/docs/module-1/week-4)
