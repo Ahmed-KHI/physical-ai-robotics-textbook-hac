@@ -15,7 +15,7 @@ export default function TranslationButton({ content, filePath }: TranslationButt
     setIsTranslating(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/translate', {
+      const response = await fetch('https://physical-ai-robotics-textbook.onrender.com/api/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

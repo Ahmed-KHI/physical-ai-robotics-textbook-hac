@@ -31,7 +31,7 @@ export default function Login({ onSuccess }: LoginProps) {
     try {
       if (isSignUp) {
         // Sign up new user
-        const response = await fetch('http://localhost:8000/api/auth/signup', {
+        const response = await fetch('https://physical-ai-robotics-textbook.onrender.com/api/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -53,7 +53,7 @@ export default function Login({ onSuccess }: LoginProps) {
         onSuccess(formData.email, formData.name, 'new_user_token');
       } else {
         // Sign in existing user
-        const response = await fetch('http://localhost:8000/api/auth/login', {
+        const response = await fetch('https://physical-ai-robotics-textbook.onrender.com/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

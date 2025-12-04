@@ -20,7 +20,7 @@ export default function PersonalizationButton({ content, filePath }: Personaliza
     setShowDropdown(false);
 
     try {
-      const response = await fetch('http://localhost:8000/api/personalize', {
+      const response = await fetch('https://physical-ai-robotics-textbook.onrender.com/api/personalize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

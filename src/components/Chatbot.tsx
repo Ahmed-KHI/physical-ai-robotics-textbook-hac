@@ -73,7 +73,7 @@ export default function Chatbot() {
 
     try {
       // Call backend API
-      const response = await fetch('http://localhost:8000/api/chat/query', {
+      const response = await fetch('https://physical-ai-robotics-textbook.onrender.com/api/chat/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
