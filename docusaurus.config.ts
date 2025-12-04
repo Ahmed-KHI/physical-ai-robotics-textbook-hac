@@ -15,10 +15,9 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://Ahmed-KHI.github.io',
+  url: 'https://physical-ai-robotics-textbook.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/physical-ai-robotics-textbook/',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -26,6 +25,10 @@ const config: Config = {
   projectName: 'physical-ai-robotics-textbook', // Your repo name
 
   onBrokenLinks: 'throw',
+  
+  // Exclude API routes from static site generation
+  onBrokenMarkdownLinks: 'warn',
+  staticDirectories: ['static'],
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -75,6 +78,23 @@ const config: Config = {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes',
       },
+    },
+  ],
+
+  plugins: [
+    function (context, options) {
+      return {
+        name: 'webpack-configuration-plugin',
+        configureWebpack(config, isServer) {
+          return {
+            externals: isServer ? {
+              'better-auth': 'commonjs better-auth',
+              '@vercel/postgres': 'commonjs @vercel/postgres',
+              'postgres': 'commonjs postgres',
+            } : {},
+          };
+        },
+      };
     },
   ],
 
