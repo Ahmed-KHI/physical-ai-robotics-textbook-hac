@@ -6,6 +6,7 @@ Handles authentication, RAG chatbot, personalization, and translation
 from fastapi import FastAPI, HTTPException, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import Response
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
@@ -101,6 +102,11 @@ async def health_check():
         "qdrant_configured": bool(os.getenv("QDRANT_URL")),
         "database_configured": bool(os.getenv("DATABASE_URL"))
     }
+
+@app.get("/favicon.ico")
+async def favicon():
+    """Return empty response for favicon requests to prevent 404 errors"""
+    return Response(content="", media_type="image/x-icon")
 
 # ============================================================================
 # Authentication Endpoints
