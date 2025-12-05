@@ -36,7 +36,7 @@ const columns: FooterColumnData[] = [
 
 const socialLinks = [
   {label: 'GitHub', href: 'https://github.com/Ahmed-KHI/physical-ai-robotics-textbook'},
-  {label: 'Demo Video', href: '#'},
+  {label: 'Demo Video', href: 'https://youtu.be/Ck3Vrv75zAQ'},
 ];
 
 const stats = [
