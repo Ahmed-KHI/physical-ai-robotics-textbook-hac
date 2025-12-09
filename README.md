@@ -324,7 +324,7 @@ This is a hackathon submission project. For suggestions or improvements, please 
 **Author**: Mirza Muhammad Ahmed  
 **GIAIC ID**: 00263838  
 **GitHub**: [@Ahmed-KHI](https://github.com/Ahmed-KHI)  
-**Project**: [physical-ai-robotics-textbook](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac)
+**Project**: [physical-ai-robotics-textbook-hac](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac)
 
 ---
 
