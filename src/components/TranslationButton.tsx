@@ -132,7 +132,9 @@ export default function TranslationButton({ content, filePath }: TranslationButt
         throw new Error('No translated content received');
       }
       
-      setTranslatedContent(data.translated_content);
+      // Format the translated content for better display
+      const formattedContent = formatUrduContent(data.translated_content);
+      setTranslatedContent(formattedContent);
       setIsTranslated(true);
       
       // Log token usage for cost tracking (development only)
@@ -149,6 +151,32 @@ export default function TranslationButton({ content, filePath }: TranslationButt
 
   const showOriginal = () => {
     setIsTranslated(false);
+  };
+
+  // Format Urdu content for professional display
+  const formatUrduContent = (content: string): string => {
+    // Convert plain text to HTML with proper structure
+    return content
+      .split('\n\n') // Split by paragraphs
+      .map(paragraph => {
+        // Detect headers (lines starting with # or having emojis)
+        if (paragraph.match(/^[#]+\s/) || paragraph.match(/^[🎯📚✅❌🧠📅📖🏗️⚡]/)) {
+          return `<h3 class="urdu-heading">${paragraph.replace(/^[#]+\s/, '')}</h3>`;
+        }
+        // Detect lists (lines starting with - or •)
+        if (paragraph.includes('\n-') || paragraph.includes('\n•') || paragraph.includes('\n✅') || paragraph.includes('\n❌')) {
+          const items = paragraph.split('\n').filter(line => line.trim());
+          const listItems = items.map(item => 
+            item.trim().match(/^[\-•✅❌]/) 
+              ? `<li>${item.replace(/^[\-•✅❌]\s*/, '')}</li>`
+              : item
+          ).join('');
+          return `<ul class="urdu-list">${listItems}</ul>`;
+        }
+        // Regular paragraph
+        return `<p class="urdu-paragraph">${paragraph}</p>`;
+      })
+      .join('\n');
   };
 
   return (

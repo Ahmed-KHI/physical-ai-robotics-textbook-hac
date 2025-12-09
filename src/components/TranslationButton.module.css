@@ -127,10 +127,55 @@
 
 .urduText {
   font-family: 'Noto Nastalikh Urdu', 'Jameel Noori Nastaleeq', 'Alvi Nastaleeq', 'Nafees Nastaleeq', Arial, sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   direction: rtl;
   text-align: right;
-  line-height: 2;
+  line-height: 2.2;
+}
+
+/* Urdu-specific formatting */
+.urduText :global(.urdu-heading) {
+  color: #1e293b;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+  direction: rtl;
+  text-align: right;
+}
+
+.urduText :global(.urdu-paragraph) {
+  margin-bottom: 1.5rem;
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+  word-spacing: 0.1rem;
+}
+
+.urduText :global(.urdu-list) {
+  list-style: none;
+  padding-right: 1.5rem;
+  padding-left: 0;
+  margin: 1.5rem 0;
+  direction: rtl;
+}
+
+.urduText :global(.urdu-list li) {
+  margin: 0.75rem 0;
+  padding-right: 1.5rem;
+  position: relative;
+  direction: rtl;
+  text-align: right;
+}
+
+.urduText :global(.urdu-list li)::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  color: #64748b;
+  font-weight: bold;
 }
 
 .content h1,

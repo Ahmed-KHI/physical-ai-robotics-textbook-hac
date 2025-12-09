@@ -306,19 +306,25 @@ TRANSLATION RULES:
 1. Translate educational explanations naturally to Pakistani Urdu
 2. Keep ALL technical terms in English: ROS 2, Python, SLAM, API, SDK, sensors, actuators, algorithms, etc.
 3. Keep ALL code snippets unchanged
-4. Preserve markdown formatting (##, ###, -, *, etc.)
-5. Maintain paragraph breaks and structure
-6. For learning objectives, translate "Learning Objectives" to "سیکھنے کے مقاصد"
-7. Use professional academic Urdu tone
-8. DO NOT translate: Week numbers, section labels, code examples, file paths, URLs
+4. PRESERVE formatting: Use double line breaks (\\n\\n) between sections/paragraphs
+5. Keep bullet points and numbered lists structure
+6. Keep emojis in their original positions
+7. Translate section headers but keep formatting symbols (##, ###, emojis)
+8. Use professional academic Urdu tone
+9. DO NOT translate: Week numbers, section labels, code examples, file paths, URLs
+
+OUTPUT FORMATTING:
+- Use \\n\\n to separate sections and paragraphs
+- Keep headers on separate lines
+- Maintain list structure with proper line breaks
+- Preserve emojis and special characters
 
 EXAMPLES:
-- "Introduction to ROS 2" → "ROS 2 کا تعارف"
-- "Learning Objectives" → "سیکھنے کے مقاصد"
-- "Python programming" → "Python پروگرامنگ"
-- "sensor fusion" → "sensor fusion"
+"## 🎯 Learning Objectives" → "## 🎯 سیکھنے کے مقاصد"
+"Introduction to ROS 2" → "ROS 2 کا تعارف"
+"- First point\\n- Second point" → "- پہلا نکتہ\\n- دوسرا نکتہ"
 
-Translate ONLY the educational content. Keep everything else as is."""
+Translate ONLY the educational content. Keep structure and formatting intact."""
                 },
                 {
                     "role": "user",
@@ -334,6 +340,9 @@ Translate ONLY the educational content. Keep everything else as is."""
         # Validate translation was successful
         if not translated_content or len(translated_content) < 50:
             raise ValueError("Translation produced insufficient content")
+        
+        # Preserve line breaks and formatting
+        translated_content = translated_content.strip()
         
         # Calculate actual token usage and cost
         tokens_used = response.usage.total_tokens
