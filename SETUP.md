@@ -110,11 +110,55 @@ pip install -r requirements.txt
 - Ensure `?sslmode=require` is appended
 - Check project isn't suspended (free tier)
 
+## 9. Spec-Kit Setup (Optional but Recommended)
+
+This project uses **Spec-Driven Development** with Spec-Kit. The specifications are already in place, but you can install Spec-Kit CLI to use slash commands.
+
+### Install Spec-Kit CLI
+
+```bash
+npm install -g @letuscode/spec-kit
+```
+
+### Using Spec-Kit Slash Commands
+
+If you're using **GitHub Copilot**, you can use these commands:
+
+```bash
+/speckit.constitution    # View project principles
+/speckit.specify         # View feature specifications
+/speckit.plan           # View implementation plan
+/speckit.tasks          # View task breakdown
+/speckit.implement      # Start implementation
+```
+
+### Spec-Kit Files Location
+
+```
+.github/prompts/          # Slash command scripts
+specs/                    # All specifications
+docs/spec-kit/           # Documentation (integrated in textbook)
+```
+
+### View Specs in Textbook
+
+Once your local server is running:
+1. Go to http://localhost:3000
+2. Navigate to **Spec-Kit Documentation** in sidebar
+3. Explore:
+   - What is Spec-Kit?
+   - Project Constitution
+   - Feature Specifications
+   - Implementation Plan
+
 ## Next Steps
 
 After setup complete:
 - [ ] Test chatbot with various questions
-- [ ] Implement authentication
-- [ ] Add personalization features
-- [ ] Add Urdu translation
-- [ ] Deploy to GitHub Pages
+- [ ] Try text selection feature
+- [ ] Test authentication with demo account
+- [ ] Explore adaptive learning personalization
+- [ ] Test Urdu translation
+- [ ] Check mobile responsiveness
+- [ ] Review Spec-Kit documentation
+- [ ] Explore project specifications

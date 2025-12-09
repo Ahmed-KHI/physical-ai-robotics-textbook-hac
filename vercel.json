@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://your-backend-url.vercel.app/api/:path*"
+      "destination": "https://physical-ai-robotics-textbook.onrender.com/api/:path*"
     }
   ]
 }

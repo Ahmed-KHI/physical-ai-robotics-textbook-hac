@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
+import SpecKitBadge from '@site/src/components/SpecKitBadge';
 
 import styles from './index.module.css';
 
@@ -30,6 +31,9 @@ function HomepageHeader() {
             <Link className={styles.secondaryBtn} to="/docs/hardware">
               View Requirements
             </Link>
+          </div>
+          <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <SpecKitBadge />
           </div>
         </div>
       </div>

@@ -280,36 +280,54 @@ async def personalize_content(request: PersonalizeRequest):
 @app.post("/api/translate")
 async def translate_content(request: TranslationRequest):
     """
-    Translate content to Urdu using GPT-4
+    Translate content to Urdu using GPT-3.5-turbo (optimized for cost)
     """
     try:
         from openai import OpenAI
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         
-        # Use GPT-3.5-turbo for translation (cheaper, still good quality)
-        # Limit to 4000 tokens to balance quality and cost
+        # Optimize token usage: Limit to 3000 chars (~750 tokens input)
+        # This keeps cost per translation under $0.002 (input + output)
+        MAX_CHARS = 3000
+        content_to_translate = request.content[:MAX_CHARS] if len(request.content) > MAX_CHARS else request.content
+        
+        # Estimate tokens (rough: 4 chars = 1 token)
+        estimated_input_tokens = len(content_to_translate) // 4
+        
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a professional translator specializing in technical content. Translate the following robotics and AI content to Urdu. Maintain technical terms in English where appropriate (like 'ROS 2', 'Python', 'SLAM'). Ensure the translation is natural and clear for Urdu-speaking learners."
+                    "content": """Translate educational content about Physical AI/Robotics to Urdu. Keep technical terms (ROS 2, Python, SLAM, API) in English. Maintain structure. Use Pakistani Urdu. Provide ONLY translation."""
                 },
                 {
                     "role": "user",
-                    "content": f"Translate to Urdu:\n\n{request.content[:8000]}"
+                    "content": f"Translate to Urdu:\n\n{content_to_translate}"
                 }
             ],
-            temperature=0.3,  # Lower temperature for more consistent translation
-            max_tokens=4000
+            temperature=0.3,
+            max_tokens=1500  # Reduced from 4000 to save costs (~$0.003 per translation)
         )
         
         translated_content = response.choices[0].message.content
         
+        # Validate translation was successful
+        if not translated_content or len(translated_content) < 50:
+            raise ValueError("Translation produced insufficient content")
+        
+        # Calculate actual token usage and cost
+        tokens_used = response.usage.total_tokens
+        estimated_cost = (response.usage.prompt_tokens * 0.0000015) + (response.usage.completion_tokens * 0.000002)
+        
         return {
             "original_content": request.content,
             "translated_content": translated_content,
-            "target_language": request.target_language
+            "target_language": request.target_language,
+            "characters_translated": len(content_to_translate),
+            "tokens_used": tokens_used,
+            "estimated_cost_usd": round(estimated_cost, 6),
+            "truncated": len(request.content) > MAX_CHARS
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")

@@ -36,4 +36,7 @@ yarn-error.log*
 *COMPLETE*.md
 *CHECKLIST*.md
 *INFO*.md
+*FIX*.md
+*OPTIMIZATION*.md
 check-setup.bat
+.specify/

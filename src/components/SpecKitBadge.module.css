@@ -1,0 +1,50 @@
+.specKitBadge {
+  display: inline-block;
+  margin: 0.5rem 0;
+}
+
+.badgeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.badgeLink:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.badgeIcon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+.badgeText {
+  color: white;
+  white-space: nowrap;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .badgeLink {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .badgeIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
