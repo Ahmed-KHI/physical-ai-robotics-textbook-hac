@@ -1,7 +1,6 @@
 # Physical AI & Humanoid Robotics Textbook 🤖
 
 [![Spec-Kit Plus](https://img.shields.io/badge/Built%20with-Spec--Kit%20Plus-00ADD8?logo=github)](https://github.com/github/spec-kit)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://physical-ai-robotics-textbook.vercel.app)
 [![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://physical-ai-robotics-textbook.onrender.com)
 [![OpenAI](https://img.shields.io/badge/AI-GPT--3.5--turbo-412991?logo=openai)](https://openai.com)
 [![Docusaurus](https://img.shields.io/badge/Docs-Docusaurus-3ECC5F?logo=docusaurus)](https://docusaurus.io)
@@ -9,7 +8,6 @@
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Qdrant](https://img.shields.io/badge/Vector%20DB-Qdrant-DC244C)](https://qdrant.tech/)
-[![Hackathon](https://img.shields.io/badge/GIAIC%20Q4-Hackathon%20Winner-FF6B6B)](https://www.giaic.com/)
 
 An AI-native interactive textbook for learning Physical AI and Humanoid Robotics, built with Docusaurus and featuring an intelligent RAG-powered chatbot.
 
