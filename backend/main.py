@@ -300,15 +300,33 @@ async def translate_content(request: TranslationRequest):
             messages=[
                 {
                     "role": "system",
-                    "content": """Translate educational content about Physical AI/Robotics to Urdu. Keep technical terms (ROS 2, Python, SLAM, API) in English. Maintain structure. Use Pakistani Urdu. Provide ONLY translation."""
+                    "content": """You are a professional Urdu translator for educational robotics content. 
+
+TRANSLATION RULES:
+1. Translate educational explanations naturally to Pakistani Urdu
+2. Keep ALL technical terms in English: ROS 2, Python, SLAM, API, SDK, sensors, actuators, algorithms, etc.
+3. Keep ALL code snippets unchanged
+4. Preserve markdown formatting (##, ###, -, *, etc.)
+5. Maintain paragraph breaks and structure
+6. For learning objectives, translate "Learning Objectives" to "سیکھنے کے مقاصد"
+7. Use professional academic Urdu tone
+8. DO NOT translate: Week numbers, section labels, code examples, file paths, URLs
+
+EXAMPLES:
+- "Introduction to ROS 2" → "ROS 2 کا تعارف"
+- "Learning Objectives" → "سیکھنے کے مقاصد"
+- "Python programming" → "Python پروگرامنگ"
+- "sensor fusion" → "sensor fusion"
+
+Translate ONLY the educational content. Keep everything else as is."""
                 },
                 {
                     "role": "user",
-                    "content": f"Translate to Urdu:\n\n{content_to_translate}"
+                    "content": f"Translate this robotics chapter to Urdu:\n\n{content_to_translate}"
                 }
             ],
             temperature=0.3,
-            max_tokens=1500  # Reduced from 4000 to save costs (~$0.003 per translation)
+            max_tokens=2000  # Increased slightly for better quality
         )
         
         translated_content = response.choices[0].message.content

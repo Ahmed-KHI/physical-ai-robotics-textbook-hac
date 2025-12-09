@@ -15,13 +15,46 @@ export default function TranslationButton({ content, filePath }: TranslationButt
   // Extract content on mount and when content changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Get the article content from the page
-      const articleElement = document.querySelector('article');
-      if (articleElement) {
-        // Get clean text content
-        const textContent = articleElement.innerText || articleElement.textContent || '';
-        setCurrentContent(textContent.trim());
-      }
+      // Extract ONLY the main chapter content, excluding navigation and sidebars
+      const extractChapterContent = () => {
+        // Try to get the markdown content area specifically
+        const markdownContent = document.querySelector('.markdown') || 
+                               document.querySelector('[class*="docItemContainer"]') ||
+                               document.querySelector('article');
+        
+        if (!markdownContent) return '';
+        
+        // Clone the element to manipulate it
+        const clone = markdownContent.cloneNode(true) as HTMLElement;
+        
+        // Remove unwanted elements
+        const selectorsToRemove = [
+          '.pagination-nav',           // Navigation
+          '.tocCollapsible',          // Table of contents
+          'nav',                      // Any nav elements
+          '.theme-doc-sidebar-container', // Sidebar
+          '[class*="tableOfContents"]',   // TOC
+          'button',                   // All buttons
+          '.breadcrumbs',            // Breadcrumbs
+          '[class*="PersonalizationButton"]', // Our own buttons
+          '[class*="TranslationButton"]',
+          'header',                  // Headers
+          'footer'                   // Footers
+        ];
+        
+        selectorsToRemove.forEach(selector => {
+          clone.querySelectorAll(selector).forEach(el => el.remove());
+        });
+        
+        // Get clean text
+        const text = clone.innerText || clone.textContent || '';
+        
+        // Clean up extra whitespace
+        return text.replace(/\n{3,}/g, '\n\n').trim();
+      };
+      
+      const cleanContent = extractChapterContent();
+      setCurrentContent(cleanContent);
     }
   }, [content]);
 
@@ -30,11 +63,33 @@ export default function TranslationButton({ content, filePath }: TranslationButt
     let contentToTranslate = currentContent;
     
     if (typeof window !== 'undefined' && !contentToTranslate) {
-      const articleElement = document.querySelector('article');
-      if (articleElement) {
-        contentToTranslate = articleElement.innerText || articleElement.textContent || '';
-        setCurrentContent(contentToTranslate.trim());
-      }
+      // Re-extract if needed
+      const extractChapterContent = () => {
+        const markdownContent = document.querySelector('.markdown') || 
+                               document.querySelector('[class*="docItemContainer"]') ||
+                               document.querySelector('article');
+        
+        if (!markdownContent) return '';
+        
+        const clone = markdownContent.cloneNode(true) as HTMLElement;
+        
+        const selectorsToRemove = [
+          '.pagination-nav', '.tocCollapsible', 'nav', '.theme-doc-sidebar-container',
+          '[class*="tableOfContents"]', 'button', '.breadcrumbs',
+          '[class*="PersonalizationButton"]', '[class*="TranslationButton"]',
+          'header', 'footer'
+        ];
+        
+        selectorsToRemove.forEach(selector => {
+          clone.querySelectorAll(selector).forEach(el => el.remove());
+        });
+        
+        const text = clone.innerText || clone.textContent || '';
+        return text.replace(/\n{3,}/g, '\n\n').trim();
+      };
+      
+      contentToTranslate = extractChapterContent();
+      setCurrentContent(contentToTranslate);
     }
 
     if (!contentToTranslate || contentToTranslate.trim().length < 10) {
