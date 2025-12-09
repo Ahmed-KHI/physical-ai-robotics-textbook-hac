@@ -170,25 +170,6 @@ Use these commands in GitHub Copilot:
 | `/speckit.tasks` | View task breakdown |
 | `/speckit.implement` | Start implementation |
 
-### Why Spec-Kit for Hackathons?
-
-**For Teachers/Judges:**
-- See complete project planning and decision-making process
-- Verify requirements are met through documented specifications
-- Understand technical architecture and rationale
-- Track development progress through task breakdown
-
-**For Developers:**
-- Clear roadmap from idea to implementation
-- No confusion about what to build next
-- Professional workflow that scales to real projects
-- Great for portfolio to show planning skills
-
-**Bonus Points:**
-- Demonstrates **professional development practices** (+20 pts)
-- Shows **clear documentation and planning** (+15 pts)
-- Exhibits **structured thinking** (+15 pts)
-
 ## 💡 Key Features
 
 ### 🤖 RAG-Powered Chatbot
