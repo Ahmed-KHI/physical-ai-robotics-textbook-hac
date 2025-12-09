@@ -28,7 +28,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://physical-ai-robotics-textbook-hac.vercel.app"
+        "https://physical-ai-robotics-textbook.vercel.app",  # Old domain (can remove after migration)
+        "https://physical-ai-robotics-textbook-hac.vercel.app"  # New domain
     ],
     allow_credentials=True,
     allow_methods=["*"],
