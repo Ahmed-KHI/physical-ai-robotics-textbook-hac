@@ -7,7 +7,7 @@ description: Guiding principles for this project
 # Project Constitution
 
 :::info View Full Document
-The complete constitution is maintained in [`.github/prompts/constitution.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/.github/prompts/constitution.md)
+The complete constitution is maintained in [`.github/prompts/constitution.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/.github/prompts/constitution.md)
 :::
 
 ## Overview
@@ -162,4 +162,4 @@ This means:
 
 ## Full Document
 
-📄 **[View Complete Constitution on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/.github/prompts/constitution.md)**
+📄 **[View Complete Constitution on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/.github/prompts/constitution.md)**

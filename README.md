@@ -1,5 +1,6 @@
 # Physical AI & Humanoid Robotics Textbook 🤖
 
+[![Spec-Kit Plus](https://img.shields.io/badge/Built%20with-Spec--Kit%20Plus-00ADD8?logo=github)](https://github.com/github/spec-kit)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://physical-ai-robotics-textbook.vercel.app)
 [![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://physical-ai-robotics-textbook.onrender.com)
 [![OpenAI](https://img.shields.io/badge/AI-GPT--3.5--turbo-412991?logo=openai)](https://openai.com)
@@ -64,8 +65,8 @@ Constitution → Specify → Plan → Tasks → Implement → Deploy
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/Ahmed-KHI/physical-ai-robotics-textbook.git
-cd physical-ai-robotics-textbook
+git clone https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac.git
+cd physical-ai-robotics-textbook-hac
 ```
 
 ### 2. Install Dependencies
@@ -325,7 +326,7 @@ This is a hackathon submission project. For suggestions or improvements, please 
 **Author**: Mirza Muhammad Ahmed  
 **GIAIC ID**: 00263838  
 **GitHub**: [@Ahmed-KHI](https://github.com/Ahmed-KHI)  
-**Project**: [physical-ai-robotics-textbook](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook)
+**Project**: [physical-ai-robotics-textbook](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac)
 
 ---
 
@@ -333,7 +334,7 @@ This is a hackathon submission project. For suggestions or improvements, please 
 
 **🏆 Built for GIAIC AI Hackathon | December 2025**
 
-[Live Demo](https://physical-ai-robotics-textbook.vercel.app) • [Documentation](./SETUP.md) • [Report Issue](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/issues)
+[Live Demo](https://physical-ai-robotics-textbook.vercel.app) • [Documentation](./SETUP.md) • [Report Issue](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/issues)
 
 Made with ❤️ by Mirza Muhammad Ahmed
 

@@ -348,8 +348,8 @@ Point them to:
 
 - **Official Spec-Kit**: [github.com/github/spec-kit](https://github.com/github/spec-kit)
 - **Node Version**: [@letuscode/spec-kit](https://www.npmjs.com/package/@letuscode/spec-kit)
-- **Our Constitution**: [View File](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/.github/prompts/constitution.md)
-- **Our Specs**: [View Folder](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/tree/main/specs)
+- **Our Constitution**: [View File](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/.github/prompts/constitution.md)
+- **Our Specs**: [View Folder](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/tree/main/specs)
 
 ## Next Steps
 

@@ -7,7 +7,7 @@ description: How we built this platform
 # Implementation Plan
 
 :::info View Full Document
-The complete implementation plan is maintained in [`specs/implementation-plan.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/specs/implementation-plan.md)
+The complete implementation plan is maintained in [`specs/implementation-plan.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/specs/implementation-plan.md)
 :::
 
 ## Overview
@@ -298,4 +298,4 @@ CREATE TABLE users (
 
 ## Full Document
 
-📄 **[View Complete Implementation Plan on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/specs/implementation-plan.md)**
+📄 **[View Complete Implementation Plan on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/specs/implementation-plan.md)**

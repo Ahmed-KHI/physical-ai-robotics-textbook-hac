@@ -7,7 +7,7 @@ description: What we're building and why
 # Feature Specifications
 
 :::info View Full Document
-The complete specifications are maintained in [`specs/feature-spec.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/specs/feature-spec.md)
+The complete specifications are maintained in [`specs/feature-spec.md`](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/specs/feature-spec.md)
 :::
 
 ## Overview
@@ -266,4 +266,4 @@ A modern web-based textbook with:
 
 ## Full Document
 
-📄 **[View Complete Specifications on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook/blob/main/specs/feature-spec.md)**
+📄 **[View Complete Specifications on GitHub →](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/blob/main/specs/feature-spec.md)**

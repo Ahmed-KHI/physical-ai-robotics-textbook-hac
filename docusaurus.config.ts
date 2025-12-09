@@ -121,7 +121,7 @@ const config: Config = {
           label: 'Curriculum',
         },
         {
-          href: 'https://github.com/Ahmed-KHI/physical-ai-robotics-textbook',
+          href: 'https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac',
           label: 'GitHub',
           position: 'left',
         },
@@ -175,7 +175,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/Ahmed-KHI/physical-ai-robotics-textbook',
+              href: 'https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac',
             },
           ],
         },
