@@ -226,7 +226,7 @@ JWT_SECRET_KEY=xxx
 - Auto-deploy from main branch
 - Build command: `npm run build`
 - Output directory: `build`
-- Domain: https://physical-ai-robotics-textbook.vercel.app
+- Domain: https://physical-ai-robotics-textbook-hac.vercel.app
 
 ### Backend (Render)
 - Auto-deploy from main branch

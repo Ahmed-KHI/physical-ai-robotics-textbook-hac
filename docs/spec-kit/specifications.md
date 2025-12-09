@@ -222,7 +222,7 @@ A modern web-based textbook with:
 - Auto-deploy from main branch
 - Build: `npm run build`
 - Output: `build`
-- URL: https://physical-ai-robotics-textbook.vercel.app
+- URL: https://physical-ai-robotics-textbook-hac.vercel.app
 
 ### Backend (Render)
 - Auto-deploy from main branch

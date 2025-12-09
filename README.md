@@ -13,7 +13,7 @@ An AI-native interactive textbook for learning Physical AI and Humanoid Robotics
 
 ## 🌐 Live Demo
 
-**🔗 Live Site**: https://physical-ai-robotics-textbook.vercel.app  
+**🔗 Live Site**: https://physical-ai-robotics-textbook-hac.vercel.app  
 **🔐 Demo Account**: `teacher@giaic.com` / `Teacher@123`  
 **⚡ Performance**: Backend kept warm 24/7 for instant response (no cold starts)  
 **🎥 Demo Video**: [Watch 90-Second Demo](https://youtu.be/Ck3Vrv75zAQ)
@@ -133,11 +133,11 @@ Spec-Kit is an open-source toolkit that enables building software through struct
 ### Spec-Kit Documentation
 
 All specifications are available in the live textbook:
-- 📋 [What is Spec-Kit?](https://physical-ai-robotics-textbook.vercel.app/docs/spec-kit/intro)
-- 🛠️ [Using Spec-Kit](https://physical-ai-robotics-textbook.vercel.app/docs/spec-kit/using-speckit)
-- 📜 [Project Constitution](https://physical-ai-robotics-textbook.vercel.app/docs/spec-kit/constitution)
-- 📝 [Feature Specifications](https://physical-ai-robotics-textbook.vercel.app/docs/spec-kit/specifications)
-- 🏗️ [Implementation Plan](https://physical-ai-robotics-textbook.vercel.app/docs/spec-kit/implementation-plan)
+- 📋 [What is Spec-Kit?](https://physical-ai-robotics-textbook-hac.vercel.app/docs/spec-kit/intro)
+- 🛠️ [Using Spec-Kit](https://physical-ai-robotics-textbook-hac.vercel.app/docs/spec-kit/using-speckit)
+- 📜 [Project Constitution](https://physical-ai-robotics-textbook-hac.vercel.app/docs/spec-kit/constitution)
+- 📝 [Feature Specifications](https://physical-ai-robotics-textbook-hac.vercel.app/docs/spec-kit/specifications)
+- 🏗️ [Implementation Plan](https://physical-ai-robotics-textbook-hac.vercel.app/docs/spec-kit/implementation-plan)
 
 ### Spec-Kit Files in Repository
 
@@ -227,7 +227,7 @@ Use these commands in GitHub Copilot:
 ## 🚀 Deployment
 
 ### Production URLs
-- **Frontend**: https://physical-ai-robotics-textbook.vercel.app (Vercel)
+- **Frontend**: https://physical-ai-robotics-textbook-hac.vercel.app (Vercel)
 - **Backend API**: https://physical-ai-robotics-textbook.onrender.com (Render)
 - **Uptime Monitoring**: Backend kept warm 24/7 with UptimeRobot for optimal performance
 
@@ -309,7 +309,7 @@ Use these commands in GitHub Copilot:
 - ✅ 100% Feature Completion Rate
 
 **Demo Video**: https://youtu.be/Ck3Vrv75zAQ  
-**Live Site**: https://physical-ai-robotics-textbook.vercel.app  
+**Live Site**: https://physical-ai-robotics-textbook-hac.vercel.app  
 
 ## 📄 License
 
@@ -332,7 +332,7 @@ This is a hackathon submission project. For suggestions or improvements, please 
 
 **🏆 Built for GIAIC AI Hackathon | December 2025**
 
-[Live Demo](https://physical-ai-robotics-textbook.vercel.app) • [Documentation](./SETUP.md) • [Report Issue](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/issues)
+[Live Demo](https://physical-ai-robotics-textbook-hac.vercel.app) • [Documentation](./SETUP.md) • [Report Issue](https://github.com/Ahmed-KHI/physical-ai-robotics-textbook-hac/issues)
 
 Made with ❤️ by Mirza Muhammad Ahmed
 

@@ -28,7 +28,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://physical-ai-robotics-textbook.vercel.app"
+        "https://physical-ai-robotics-textbook-hac.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
